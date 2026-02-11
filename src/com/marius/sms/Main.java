@@ -6,6 +6,7 @@ import com.marius.sms.backend.entities.Role;
 import com.marius.sms.backend.entities.Student;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,9 +16,14 @@ public class Main {
             System.out.println(role);
         }
 
-        StudentDAO dao1 = new StudentDAO();
-        List<Student> students = dao1.getAll();
+        StudentDAO studentDAO = new StudentDAO();
+        List<Student> students = studentDAO.getAll();
         for (Student student : students) {
+            System.out.println(student);
+        }
+        Optional<Student> studentOptional = studentDAO.getStudentByStudentNumber("S001");
+        if(studentOptional.isPresent()) {
+            Student student = studentOptional.get();
             System.out.println(student);
         }
     }

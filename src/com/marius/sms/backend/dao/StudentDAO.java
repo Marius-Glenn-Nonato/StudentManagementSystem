@@ -125,12 +125,12 @@ public class StudentDAO implements DAO<Student, Integer> {
     }
 
     //STUDENT GET BY STUDENT NUMBER
-    public Optional<Student> getStudentByStudentNumber(Integer studentNumber) {
+    public Optional<Student> getStudentByStudentNumber(String studentNumber) {
         try(
                 Connection connection = DatabaseUtils.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_BY_STUDENT_NUMBER_QUERY);
                 ){
-            preparedStatement.setInt(1, studentNumber);
+            preparedStatement.setString(1, studentNumber);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Student> students = processResultSet(resultSet);
             if(!students.isEmpty()) {
