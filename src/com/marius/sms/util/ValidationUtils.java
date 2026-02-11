@@ -1,21 +1,28 @@
 package com.marius.sms.util;
 
-import java.util.regex.Pattern;
+import com.marius.sms.backend.exception.InvalidDataException;
 
 public class ValidationUtils {
 
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
-
     public static boolean isValidEmail(String email) {
-        return email != null && EMAIL_PATTERN.matcher(email).matches();
+        return email != null && email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
-    public static boolean isNonEmpty(String value) {
-        return value != null && !value.trim().isEmpty();
+    public static void validateEmail(String email) {
+        if (!isValidEmail(email)) {
+            throw new InvalidDataException("Invalid email format: " + email);
+        }
     }
 
-    public static boolean isPositiveInteger(int value) {
-        return value > 0;
+    public static void validateNonEmpty(String field, String fieldName) {
+        if (field == null || field.trim().isEmpty()) {
+            throw new InvalidDataException(fieldName + " cannot be empty.");
+        }
+    }
+
+    public static void validatePositive(int value, String fieldName) {
+        if (value <= 0) {
+            throw new InvalidDataException(fieldName + " must be positive.");
+        }
     }
 }

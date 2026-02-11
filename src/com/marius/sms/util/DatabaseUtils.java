@@ -22,7 +22,7 @@ public class DatabaseUtils {
         }
     }
 
-    private static void handleSQLException(String methodName, SQLException e, Logger log) {
+    public static void handleSQLException(String methodName, SQLException e, Logger log) {
         log.warning(String.format(exceptionFormat, methodName, e.getMessage(),e.getErrorCode()));
         throw new RuntimeException(e);
     }
