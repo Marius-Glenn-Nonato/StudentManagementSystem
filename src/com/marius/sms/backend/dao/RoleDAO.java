@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class RoleDAO implements DAO<Role, Integer> {
     private static final Logger LOGGER = Logger.getLogger(RoleDAO.class.getName());
-    public static final  String TABLE_NAME = "sms.roles";
+    private static final String TABLE_NAME = "sms.roles";
 
     private static final String SQL_GET_ALL_ROLES_QUERY = "SELECT role_id, role_name FROM "+TABLE_NAME;
     private static final String SQL_GET_ROLE_BY_ID_QUERY = "SELECT role_id, role_name FROM "+TABLE_NAME+" WHERE role_id = ?";
@@ -25,7 +25,8 @@ public class RoleDAO implements DAO<Role, Integer> {
         List<Role> roles = new ArrayList<>();
         try(
                 Connection connection = DatabaseUtils.getConnection();
-                Statement statement = connection.createStatement();){
+                Statement statement = connection.createStatement();
+                ){
             ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_ROLES_QUERY);
             roles = processResultSet(resultSet);
         } catch (SQLException e) {
@@ -52,6 +53,7 @@ public class RoleDAO implements DAO<Role, Integer> {
                 }
 
                 connection.commit();
+                System.out.println("Role created successfully with id "+entity.getRole_id());
                 return entity;
             }
         } catch (SQLException e) {
@@ -70,22 +72,25 @@ public class RoleDAO implements DAO<Role, Integer> {
                 try {
                     System.out.println("Connection closed " + getClass().getName());
                     connection.close();
-                } catch (SQLException ignored) {}
+                } catch (SQLException ez) {
+                    DatabaseUtils.handleSQLException("RoleDAO.create().close()", ez, LOGGER);
+                }
             }
         }
     }
 
 
     @Override
-    public Optional<Role> getOne(Integer integer) {
+    public Optional<Role> getOne(Integer roleId) {
 
         try(
                 Connection connection = DatabaseUtils.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE_BY_ID_QUERY);) {
-            preparedStatement.setInt(1, integer);
+            preparedStatement.setInt(1, roleId);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Role> roles = processResultSet(resultSet);
             if(!roles.isEmpty()){
+                System.out.println("Role found with id " + roleId);
                 System.out.println("Connection closed " + getClass().getName());
                 return Optional.of(roles.get(0));
             }
@@ -112,13 +117,15 @@ public class RoleDAO implements DAO<Role, Integer> {
                     throw new SQLException("RoleDAO.update(): Role not found with id " + entity.getRole_id());
                 }
             }
-
             connection.commit();
+            System.out.println("Role updated with id "+ entity.getRole_id());
             return entity;
 
         } catch (SQLException e) {
             if (connection != null) {
-                try { connection.rollback(); } catch (SQLException ex) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
                     DatabaseUtils.handleSQLException("RoleDAO.update().rollback", ex, LOGGER);
                 }
             }

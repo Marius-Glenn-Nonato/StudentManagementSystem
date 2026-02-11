@@ -1,7 +1,9 @@
 package com.marius.sms.backend.entities;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import java.time.LocalDateTime;
 
 public class Student {
     private Integer student_id;
@@ -9,12 +11,12 @@ public class Student {
     private String first_name;
     private String last_name;
     private String email;
-    private Date date_of_birth;
-    private Timestamp created_at;
+    private LocalDate date_of_birth;
+    private LocalDateTime created_at;
 
     public Student() { }
 
-    public Student(Integer student_id, String student_number, String first_name, String last_name, String email, Date date_of_birth, Timestamp created_at) {
+    public Student(Integer student_id, String student_number, String first_name, String last_name, String email, LocalDate date_of_birth, LocalDateTime created_at) {
         this.student_id = student_id;
         this.student_number = student_number;
         this.first_name = first_name;
@@ -59,17 +61,17 @@ public class Student {
         this.email = email;
     }
 
-    public Date getDate_of_birth() {
+    public LocalDate getDate_of_birth() {
         return date_of_birth;
     }
-    public void setDate_of_birth(Date date_of_birth) {
+    public void setDate_of_birth(LocalDate date_of_birth) {
         this.date_of_birth = date_of_birth;
     }
 
-    public Timestamp getCreated_at() {
+    public LocalDateTime getCreated_at() {
         return created_at;
     }
-    public void setCreated_at(Timestamp created_at) {
+    public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
     }
 
