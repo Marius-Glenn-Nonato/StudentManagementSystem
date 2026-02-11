@@ -31,6 +31,7 @@ public class RoleDAO implements DAO<Role, Integer> {
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("RoleDAO.getAll()", e, LOGGER);
         }
+        System.out.println("Connection closed " + getClass().getName());
         return roles;
     }
 
@@ -67,6 +68,7 @@ public class RoleDAO implements DAO<Role, Integer> {
         } finally {
             if (connection != null) {
                 try {
+                    System.out.println("Connection closed " + getClass().getName());
                     connection.close();
                 } catch (SQLException ignored) {}
             }
@@ -76,17 +78,21 @@ public class RoleDAO implements DAO<Role, Integer> {
 
     @Override
     public Optional<Role> getOne(Integer integer) {
-        Connection connection = DatabaseUtils.getConnection();
-        try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE_BY_ID_QUERY)) {
+
+        try(
+                Connection connection = DatabaseUtils.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE_BY_ID_QUERY);) {
             preparedStatement.setInt(1, integer);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Role> roles = processResultSet(resultSet);
             if(!roles.isEmpty()){
+                System.out.println("Connection closed " + getClass().getName());
                 return Optional.of(roles.get(0));
             }
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("RoleDAO.getOne()", e, LOGGER);
         }
+        System.out.println("Connection closed null" + getClass().getName());
         return Optional.empty();
     }
 
@@ -120,7 +126,10 @@ public class RoleDAO implements DAO<Role, Integer> {
             return null;
         } finally {
             if (connection != null) {
-                try { connection.close(); } catch (SQLException ignored) {}
+                try {
+                    System.out.println("Connection closed " + getClass().getName());
+                    connection.close();
+                } catch (SQLException ignored) {}
             }
         }
     }
@@ -152,6 +161,7 @@ public class RoleDAO implements DAO<Role, Integer> {
         } finally {
             if (connection != null) {
                 try {
+                    System.out.println("Connection closed " + getClass().getName());
                     connection.close();
                 } catch (SQLException e) {
                     DatabaseUtils.handleSQLException("RoleDAO.delete().finally.close", e, LOGGER);
