@@ -64,7 +64,7 @@ public class RoleDAO implements DAO<Role, Integer> {
                     DatabaseUtils.handleSQLException("RoleDAO.rollback()", ex, LOGGER);
                 }
             }
-            DatabaseUtils.handleSQLException("RoleDAO.create()", e, LOGGER);
+            DatabaseUtils.handleSQLException("RoleDAO.create().null", e, LOGGER);
             return null;
 
         } finally {
@@ -130,6 +130,7 @@ public class RoleDAO implements DAO<Role, Integer> {
                 }
             }
             DatabaseUtils.handleSQLException("RoleDAO.update()", e, LOGGER);
+
             return null;
         } finally {
             if (connection != null) {
@@ -153,10 +154,9 @@ public class RoleDAO implements DAO<Role, Integer> {
                 if(affectedRows == 0){
                     throw new SQLException("RoleDAO.delete().affectedRows: Failed to insert new role");
                 }
-                connection.commit();
-                return true;
-
             }
+            connection.commit();
+            return true;
         } catch (SQLException e) {
             if(connection != null){
                 try {
@@ -165,6 +165,8 @@ public class RoleDAO implements DAO<Role, Integer> {
                     DatabaseUtils.handleSQLException("RoleDAO.delete().rollback", e, LOGGER);
                 }
             }
+            DatabaseUtils.handleSQLException("RoleDAO.delete().null", e, LOGGER);
+            return false;
         } finally {
             if (connection != null) {
                 try {
@@ -175,7 +177,6 @@ public class RoleDAO implements DAO<Role, Integer> {
                 }
             }
         }
-        return false;
     }
     private List<Role> processResultSet(ResultSet rs) throws SQLException {
         List<Role> roles = new ArrayList<>();

@@ -4,7 +4,6 @@ import com.marius.sms.backend.entities.Student;
 import com.marius.sms.util.DatabaseUtils;
 import com.marius.sms.util.DateUtils;
 
-import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +39,11 @@ public class StudentDAO implements DAO<Student, Integer> {
                 ){
             ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_STUDENTS_QUERY);
             students = processResultSet(resultSet);
-
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("StudentDAO.getAll()",e,LOGGER);
         }
-        System.out.println("Connection closed " + getClass().getName());
-        return List.of();
+        DatabaseUtils.printSQLConnectionClose("getAll()",StudentDAO.class);
+        return students;
     }
 
     //----------------------INSERT-----------------------------
@@ -74,26 +72,26 @@ public class StudentDAO implements DAO<Student, Integer> {
                     }
                 }
                 connection.commit();
-                System.out.println("Student created with id " + entity.getStudent_id());
+                DatabaseUtils.printNewEntityCreated(entity, entity.getStudent_id());
                 return entity;
             }
         }catch (SQLException e){
-            if(connection == null){
+            if(connection != null){
                 try{
                     connection.rollback();
                 } catch (SQLException ex) {
                     DatabaseUtils.handleSQLException("StudentDAO.create().rollback",ex,LOGGER);
                 }
             }
-            DatabaseUtils.handleSQLException("StudentDAO.create()",e,LOGGER);
+            DatabaseUtils.handleSQLException("StudentDAO.create().null",e,LOGGER);
             return null;
         }finally {
             if(connection != null){
                 try{
-                    System.out.println("Connection closed " + getClass().getName());
+                    DatabaseUtils.printSQLConnectionClose("StudentDAO.create()",StudentDAO.class);
                     connection.close();
                 } catch (SQLException ez) {
-                    DatabaseUtils.handleSQLException("StudentDAO.create().close().connectionClose",ez,LOGGER);
+                    DatabaseUtils.handleSQLException("StudentDAO.create().close()",ez,LOGGER);
                 }
             }
         }
@@ -112,14 +110,17 @@ public class StudentDAO implements DAO<Student, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Student> students = processResultSet(resultSet);
             if(!students.isEmpty()) {
+                /*
+                TODO: DO DatabaseUtils.foundEntity
+                 */
                 System.out.println("Student found with id " + studentId);
-                System.out.println("Connection closed " + getClass().getName());
+                DatabaseUtils.printSQLConnectionClose("getOne()",StudentDAO.class);
                 return Optional.of(students.get(0));
             }
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("StudentDAO.getOne() (BY ID)",e,LOGGER);
         }
-        System.out.println("Connection closed null" + getClass().getName());
+        DatabaseUtils.printSQLConnectionClose("getOne().null",StudentDAO.class);
         return Optional.empty();
     }
 
@@ -133,24 +134,50 @@ public class StudentDAO implements DAO<Student, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Student> students = processResultSet(resultSet);
             if(!students.isEmpty()) {
+                /*
+                TODO: DO DatabaseUtils.foundEntity
+                 */
                 System.out.println("Student found with student number " + studentNumber);
-                System.out.println("Connection closed " + getClass().getName());
+                DatabaseUtils.printSQLConnectionClose("getStudentByStudentNumber()",StudentDAO.class);
                 return Optional.of(students.get(0));
             }
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("StudentDAO.getStudentByStudentNumber()",e,LOGGER);
         }
-        System.out.println("Connection closed null" + getClass().getName());
+        DatabaseUtils.printSQLConnectionClose("getStudentByStudentNumber().null",StudentDAO.class);
+        return Optional.empty();
+    }
+
+    //STUDENT GET BY STUDENT NUMBER
+    public Optional<Student> getStudentByEmail(String email) {
+        try(
+                Connection connection = DatabaseUtils.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_BY_EMAIL_QUERY);
+        ){
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Student> students = processResultSet(resultSet);
+            if(!students.isEmpty()) {
+                /*
+                TODO: DO DatabaseUtils.foundEntity
+                 */
+                System.out.println("Student found with student email " + email);
+                DatabaseUtils.printSQLConnectionClose("getStudentByEmail()",StudentDAO.class);
+                return Optional.of(students.get(0));
+            }
+        } catch (SQLException e) {
+            DatabaseUtils.handleSQLException("StudentDAO.getStudentByEmail()",e,LOGGER);
+        }
+        DatabaseUtils.printSQLConnectionClose("getStudentByEmail().null",StudentDAO.class);
         return Optional.empty();
     }
 
     //--------------------UPDATE------------------------------
-
     @Override
     public Student update(Student entity) {
        return null;
     }
-
+    //Update Student Email
     public Student updateEmail(Student entity) {
         Connection connection = null;
         try{
@@ -167,6 +194,9 @@ public class StudentDAO implements DAO<Student, Integer> {
                 }
             }
             connection.commit();
+            /*
+                TODO: DO DatabaseUtils.updatedEntity()
+                 */
             System.out.println("Student updated email with id " + entity.getStudent_number());
             return entity;
         } catch (SQLException e) {
@@ -174,26 +204,192 @@ public class StudentDAO implements DAO<Student, Integer> {
                 try {
                     connection.rollback();
                 } catch (SQLException ex) {
-                    DatabaseUtils.handleSQLException("StudentDAO.update().rollback",ex,LOGGER);
+                    DatabaseUtils.handleSQLException("StudentDAO.updateEmail().rollback",ex,LOGGER);
                 }
             }
-            DatabaseUtils.handleSQLException("StudentDAO.update()",e,LOGGER);
+            DatabaseUtils.handleSQLException("StudentDAO.updateEmail().null",e,LOGGER);
             return null;
         }finally {
             if(connection != null){
                 try {
-                    System.out.println("Connection closed " + getClass().getName());
+                    DatabaseUtils.printSQLConnectionClose("StudentDAO.updateEmail()",StudentDAO.class);
                     connection.close();
                 } catch (SQLException e) {
-                    DatabaseUtils.handleSQLException("StudentDAO.update().close()",e,LOGGER);
+                    DatabaseUtils.handleSQLException("StudentDAO.updateEmail().close()",e,LOGGER);
                 }
             }
         }
     }
+    //Update Student First Name
+    public Student updateFirstName(Student entity) {
+        Connection connection = null;
+        try{
+            connection = DatabaseUtils.getConnection();
+            connection.setAutoCommit(false);
+
+            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STUDENT_FIRST_NAME_QUERY)){
+                preparedStatement.setString(1, entity.getFirst_name());
+                preparedStatement.setString(2, entity.getStudent_number());
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("StudentDAO.updateFirstName() failed. Student not found with student number "+ entity.getStudent_number());
+
+                }
+            }
+            connection.commit();
+            /*
+                TODO: DO DatabaseUtils.updatedEntity()
+                 */
+            System.out.println("Student updated firstname with id " + entity.getStudent_number());
+            return entity;
+        } catch (SQLException e) {
+            if(connection != null){
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("StudentDAO.updateFirstname().rollback",ex,LOGGER);
+                }
+            }
+            DatabaseUtils.handleSQLException("StudentDAO.updateFirstName().null",e,LOGGER);
+            return null;
+        }finally {
+            if(connection != null){
+                try {
+                    DatabaseUtils.printSQLConnectionClose("StudentDAO.updateFirstName()",StudentDAO.class);
+                    connection.close();
+                } catch (SQLException e) {
+                    DatabaseUtils.handleSQLException("StudentDAO.updateFirstName().close()",e,LOGGER);
+                }
+            }
+        }
+    }
+
+    //Update Student Last Name
+    public Student updateLastName(Student entity) {
+        Connection connection = null;
+        try{
+            connection = DatabaseUtils.getConnection();
+            connection.setAutoCommit(false);
+
+            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STUDENT_LAST_NAME_QUERY)){
+                preparedStatement.setString(1, entity.getLast_name());
+                preparedStatement.setString(2, entity.getStudent_number());
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("StudentDAO.updateLastName() failed. Student not found with student number "+ entity.getStudent_number());
+
+                }
+            }
+            connection.commit();
+            /*
+                TODO: DO DatabaseUtils.updatedEntity()
+                 */
+            System.out.println("Student updated lastname with id " + entity.getStudent_number());
+            return entity;
+        } catch (SQLException e) {
+            if(connection != null){
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("StudentDAO.updateLastname().rollback",ex,LOGGER);
+                }
+            }
+            DatabaseUtils.handleSQLException("StudentDAO.updateLastName().null",e,LOGGER);
+            return null;
+        }finally {
+            if(connection != null){
+                try {
+                    DatabaseUtils.printSQLConnectionClose("StudentDAO.updateLastName()",StudentDAO.class);
+                    connection.close();
+                } catch (SQLException e) {
+                    DatabaseUtils.handleSQLException("StudentDAO.updateLastName().close()",e,LOGGER);
+                }
+            }
+        }
+    }
+    //Update Student Date of Birth
+    public Student updateDateOfBirth(Student entity) {
+        Connection connection = null;
+        try{
+            connection = DatabaseUtils.getConnection();
+            connection.setAutoCommit(false);
+
+            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STUDENT_DATE_OF_BIRTH_QUERY)){
+                preparedStatement.setDate(1, DateUtils.toSqlDate(entity.getDate_of_birth()));
+                preparedStatement.setString(2, entity.getStudent_number());
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("StudentDAO.updateDateOfBirth() failed. Student not found with student number "+ entity.getStudent_number());
+
+                }
+            }
+            connection.commit();
+            /*
+                TODO: DO DatabaseUtils.updatedEntity()
+                 */
+            System.out.println("Student updated date of birth with id " + entity.getStudent_number());
+            return entity;
+        } catch (SQLException e) {
+            if(connection != null){
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("StudentDAO.updateDateOfBirth().rollback",ex,LOGGER);
+                }
+            }
+            DatabaseUtils.handleSQLException("StudentDAO.updateDateOfBirth().null",e,LOGGER);
+            return null;
+        }finally {
+            if(connection != null){
+                try {
+                    DatabaseUtils.printSQLConnectionClose("StudentDAO.updateDateOfBirth()",StudentDAO.class);
+                    connection.close();
+                } catch (SQLException e) {
+                    DatabaseUtils.handleSQLException("StudentDAO.updateDateOfBirth().close()",e,LOGGER);
+                }
+            }
+        }
+    }
+
     //-------------------DELETE-------------------------------
     @Override
     public boolean delete(Integer integer) {
-        return false;
+        Connection connection = null;
+        try{
+            connection = DatabaseUtils.getConnection();
+            connection.setAutoCommit(false);
+            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_STUDENT_QUERY)){
+                preparedStatement.setInt(1, integer);
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("StudentDAO.delete() failed. Student not found with student number "+ integer);
+                }
+            }
+            connection.commit();
+            /**
+             * TODO: DO DatabaseUtils.deleteEntity
+             */
+            return true;
+        }catch (SQLException e){
+            if (connection != null) {
+                try{
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("StudentDAO.delete().rollback",e,LOGGER);
+                }
+            }
+            DatabaseUtils.handleSQLException("StudentDAO.delete().null",e,LOGGER);
+            return false;
+        }finally{
+            if(connection != null){
+                try{
+                    DatabaseUtils.printSQLConnectionClose("StudentDAO.delete()",StudentDAO.class);
+                    connection.close();
+                } catch (SQLException e) {
+                    DatabaseUtils.handleSQLException("StudentDAO.delete().close()",e,LOGGER);
+                }
+            }
+        }
     }
     private List<Student> processResultSet(ResultSet resultSet) throws SQLException {
         List<Student> students = new ArrayList<>();

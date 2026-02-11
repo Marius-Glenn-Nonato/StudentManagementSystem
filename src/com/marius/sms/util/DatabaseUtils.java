@@ -26,4 +26,12 @@ public class DatabaseUtils {
         log.warning(String.format(exceptionFormat, methodName, e.getMessage(),e.getErrorCode()));
         throw new RuntimeException(e);
     }
+
+    public static void printSQLConnectionClose(String methodName, Class classname) {
+        System.out.println("Connection closed " +methodName+" @"+ classname.getName());
+    }
+
+    public static void printNewEntityCreated(Object entity, int id) {
+        System.out.println("New " + entity.getClass().getName() + " created with id " + id);
+    }
 }
