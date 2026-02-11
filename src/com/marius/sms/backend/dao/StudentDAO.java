@@ -22,10 +22,10 @@ public class StudentDAO implements DAO<Student, Integer> {
 
     private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (student_number, first_name, last_name, email, date_of_birth, created_at) VALUES (?,?,?,?,?,?)";
 
-    private static final String SQL_UPDATE_STUDENT_EMAIL_QUERY = "UPDATE "+TABLE_NAME+"SET email=? WHERE student_number=?";
-    private static final String SQL_UPDATE_STUDENT_FIRST_NAME_QUERY = "UPDATE "+TABLE_NAME+"SET first_name=? WHERE student_number=?";
-    private static final String SQL_UPDATE_STUDENT_LAST_NAME_QUERY = "UPDATE "+TABLE_NAME+"SET last_name=? WHERE student_number=?";
-    private static final String SQL_UPDATE_STUDENT_DATE_OF_BIRTH_QUERY = "UPDATE "+TABLE_NAME+"SET date_of_birth=? WHERE student_number=?";
+    private static final String SQL_UPDATE_STUDENT_EMAIL_QUERY = "UPDATE "+TABLE_NAME+" SET email=? WHERE student_number=?";
+    private static final String SQL_UPDATE_STUDENT_FIRST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=? WHERE student_number=?";
+    private static final String SQL_UPDATE_STUDENT_LAST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET last_name=? WHERE student_number=?";
+    private static final String SQL_UPDATE_STUDENT_DATE_OF_BIRTH_QUERY = "UPDATE "+TABLE_NAME+" SET date_of_birth=? WHERE student_number=?";
 
     private static final String SQL_DELETE_STUDENT_QUERY = "DELETE FROM "+TABLE_NAME+" WHERE student_number=?";
 
@@ -36,8 +36,8 @@ public class StudentDAO implements DAO<Student, Integer> {
         try(
                 Connection connection = DatabaseUtils.getConnection();
                 Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_STUDENTS_QUERY);
                 ){
-            ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_STUDENTS_QUERY);
             students = processResultSet(resultSet);
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("StudentDAO.getAll()",e,LOGGER);
@@ -89,6 +89,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             if(connection != null){
                 try{
                     DatabaseUtils.printSQLConnectionClose("StudentDAO.create()",StudentDAO.class);
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException ez) {
                     DatabaseUtils.handleSQLException("StudentDAO.create().close()",ez,LOGGER);
@@ -213,6 +214,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             if(connection != null){
                 try {
                     DatabaseUtils.printSQLConnectionClose("StudentDAO.updateEmail()",StudentDAO.class);
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException e) {
                     DatabaseUtils.handleSQLException("StudentDAO.updateEmail().close()",e,LOGGER);
@@ -256,6 +258,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             if(connection != null){
                 try {
                     DatabaseUtils.printSQLConnectionClose("StudentDAO.updateFirstName()",StudentDAO.class);
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException e) {
                     DatabaseUtils.handleSQLException("StudentDAO.updateFirstName().close()",e,LOGGER);
@@ -300,6 +303,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             if(connection != null){
                 try {
                     DatabaseUtils.printSQLConnectionClose("StudentDAO.updateLastName()",StudentDAO.class);
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException e) {
                     DatabaseUtils.handleSQLException("StudentDAO.updateLastName().close()",e,LOGGER);
@@ -343,6 +347,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             if(connection != null){
                 try {
                     DatabaseUtils.printSQLConnectionClose("StudentDAO.updateDateOfBirth()",StudentDAO.class);
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException e) {
                     DatabaseUtils.handleSQLException("StudentDAO.updateDateOfBirth().close()",e,LOGGER);
@@ -375,7 +380,7 @@ public class StudentDAO implements DAO<Student, Integer> {
                 try{
                     connection.rollback();
                 } catch (SQLException ex) {
-                    DatabaseUtils.handleSQLException("StudentDAO.delete().rollback",e,LOGGER);
+                    DatabaseUtils.handleSQLException("StudentDAO.delete().rollback",ex,LOGGER);
                 }
             }
             DatabaseUtils.handleSQLException("StudentDAO.delete().null",e,LOGGER);
@@ -384,6 +389,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             if(connection != null){
                 try{
                     DatabaseUtils.printSQLConnectionClose("StudentDAO.delete()",StudentDAO.class);
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException e) {
                     DatabaseUtils.handleSQLException("StudentDAO.delete().close()",e,LOGGER);

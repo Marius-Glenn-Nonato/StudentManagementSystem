@@ -26,8 +26,9 @@ public class RoleDAO implements DAO<Role, Integer> {
         try(
                 Connection connection = DatabaseUtils.getConnection();
                 Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_ROLES_QUERY);
                 ){
-            ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_ROLES_QUERY);
+
             roles = processResultSet(resultSet);
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("RoleDAO.getAll()", e, LOGGER);
@@ -71,6 +72,7 @@ public class RoleDAO implements DAO<Role, Integer> {
             if (connection != null) {
                 try {
                     System.out.println("Connection closed " + getClass().getName());
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException ez) {
                     DatabaseUtils.handleSQLException("RoleDAO.create().close()", ez, LOGGER);
@@ -136,6 +138,7 @@ public class RoleDAO implements DAO<Role, Integer> {
             if (connection != null) {
                 try {
                     System.out.println("Connection closed " + getClass().getName());
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException ignored) {}
             }
@@ -171,6 +174,7 @@ public class RoleDAO implements DAO<Role, Integer> {
             if (connection != null) {
                 try {
                     System.out.println("Connection closed " + getClass().getName());
+                    connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException e) {
                     DatabaseUtils.handleSQLException("RoleDAO.delete().finally.close", e, LOGGER);
