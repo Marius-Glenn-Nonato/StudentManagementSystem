@@ -11,19 +11,21 @@ import java.util.logging.Logger;
 
 public class RoleDAO implements DAO<Role, Integer> {
     private static final Logger LOGGER = Logger.getLogger(RoleDAO.class.getName());
-    private static final String SQL_GET_ALL_ROLES_QUERY = "SELECT * FROM role";
-    private static final String SQL_GET_ROLE_BY_ID_QUERY = "SELECT * FROM role WHERE id = ?";
-    private static final String SQL_INSERT_ROLE = "INSERT INTO role (name, description) VALUES (?, ?)";
-    private static final String SQL_DELETE_ROLE = "DELETE FROM role WHERE id = ?";
-    private static final String SQL_UPDATE_ROLE = "UPDATE role SET name = ? WHERE id = ?";
+    public static final  String TABLE_NAME = "sms.roles";
+
+    private static final String SQL_GET_ALL_ROLES_QUERY = "SELECT role_id, role_name FROM "+TABLE_NAME;
+    private static final String SQL_GET_ROLE_BY_ID_QUERY = "SELECT role_id, role_name FROM "+TABLE_NAME+" WHERE role_id = ?";
+    private static final String SQL_INSERT_ROLE = "INSERT INTO "+TABLE_NAME+" (role_name) VALUES (?)";
+    private static final String SQL_DELETE_ROLE = "DELETE FROM "+TABLE_NAME+" WHERE role_id = ?";
+    private static final String SQL_UPDATE_ROLE = "UPDATE "+TABLE_NAME+" SET role_name = ? WHERE role_id = ?";
 
 
     @Override
     public List<Role> getAll() {
         List<Role> roles = new ArrayList<>();
-        Connection connection = DatabaseUtils.getConnection();
-
-        try(Statement statement = connection.createStatement()){
+        try(
+                Connection connection = DatabaseUtils.getConnection();
+                Statement statement = connection.createStatement();){
             ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_ROLES_QUERY);
             roles = processResultSet(resultSet);
         } catch (SQLException e) {
@@ -34,50 +36,129 @@ public class RoleDAO implements DAO<Role, Integer> {
 
     @Override
     public Role create(Role entity) {
-        Connection connection = DatabaseUtils.getConnection();
-        try{
+        Connection connection = null;
+        try {
+            connection = DatabaseUtils.getConnection();
             connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_ROLE, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, entity.getRole_id());
-            preparedStatement.setString(2, entity.getRole_name());
-            int affectedRows = preparedStatement.executeUpdate();
-            if(affectedRows == 0){
-                throw new SQLException("RoleDAO.create().affectedRows: Failed to insert new role");
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_ROLE)) {
+
+                preparedStatement.setString(1, entity.getRole_name());
+
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Failed to insert new role.");
+                }
+
+                connection.commit();
+                return entity;
             }
-            try(ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                if(resultSet.next()){
-                    int generatedId = resultSet.getInt(1);
-                    entity.setRole_id(generatedId);
-                }else{
-                    throw new SQLException("RoleDAO.create().generatingKeys(): Failed to insert new role");
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("RoleDAO.rollback()", ex, LOGGER);
                 }
             }
-            connection.commit();
-            preparedStatement.close();
-            return entity;
-        } catch (SQLException e) {
-            try{
-                connection.rollback();
-            } catch (SQLException ex) {
-                DatabaseUtils.handleSQLException("RoleDAO.create().rollbackException", e, LOGGER);
+            DatabaseUtils.handleSQLException("RoleDAO.create()", e, LOGGER);
+            return null;
+
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ignored) {}
             }
         }
-        return null;
     }
+
 
     @Override
     public Optional<Role> getOne(Integer integer) {
+        Connection connection = DatabaseUtils.getConnection();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE_BY_ID_QUERY)) {
+            preparedStatement.setInt(1, integer);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Role> roles = processResultSet(resultSet);
+            if(!roles.isEmpty()){
+                return Optional.of(roles.get(0));
+            }
+        } catch (SQLException e) {
+            DatabaseUtils.handleSQLException("RoleDAO.getOne()", e, LOGGER);
+        }
         return Optional.empty();
     }
 
     @Override
     public Role update(Role entity) {
-        return null;
+        Connection connection = null;
+        try {
+            connection = DatabaseUtils.getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_ROLE)) {
+                ps.setString(1, entity.getRole_name());
+                ps.setInt(2, entity.getRole_id());
+
+                int affectedRows = ps.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("RoleDAO.update(): Role not found with id " + entity.getRole_id());
+                }
+            }
+
+            connection.commit();
+            return entity;
+
+        } catch (SQLException e) {
+            if (connection != null) {
+                try { connection.rollback(); } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("RoleDAO.update().rollback", ex, LOGGER);
+                }
+            }
+            DatabaseUtils.handleSQLException("RoleDAO.update()", e, LOGGER);
+            return null;
+        } finally {
+            if (connection != null) {
+                try { connection.close(); } catch (SQLException ignored) {}
+            }
+        }
     }
 
     @Override
-    public void delete(Integer integer) {
+    public boolean delete(Integer integer) {
+        Connection connection = null;
+        try{
+            connection = DatabaseUtils.getConnection();
+            connection.setAutoCommit(false);
+            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_ROLE)) {
+                preparedStatement.setInt(1, integer);
+                int affectedRows = preparedStatement.executeUpdate();
+                if(affectedRows == 0){
+                    throw new SQLException("RoleDAO.delete().affectedRows: Failed to insert new role");
+                }
+                connection.commit();
+                return true;
 
+            }
+        } catch (SQLException e) {
+            if(connection != null){
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("RoleDAO.delete().rollback", e, LOGGER);
+                }
+            }
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    DatabaseUtils.handleSQLException("RoleDAO.delete().finally.close", e, LOGGER);
+                }
+            }
+        }
+        return false;
     }
     private List<Role> processResultSet(ResultSet rs) throws SQLException {
         List<Role> roles = new ArrayList<>();
