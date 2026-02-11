@@ -402,6 +402,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             student.setEmail(resultSet.getString("email"));
             student.setDate_of_birth(DateUtils.toLocalDate(resultSet.getDate("date_of_birth")));
             student.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("created_at")));
+            students.add(student);
         }
         return students;
     }

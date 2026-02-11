@@ -9,25 +9,29 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DateUtils {
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public static String formatTimeStamp (Timestamp ts) {
-        if(ts == null){
-            return null;
-        }
-        return new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(ts);
-    }
-    //Parsing a string to a SQL date
-    public static Date parseData(String dateStr){
-        try{
-            java.util.Date utilDate = new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse(dateStr);
-            return new Date(utilDate.getTime());
-        } catch (ParseException e) {
-            throw new RuntimeException("Invalid date format: " + dateStr);
-        }
-    }
+//    public static String formatTimeStamp (Timestamp ts) {
+//        if(ts == null){
+//            return null;
+//        }
+//        return new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(ts);
+//    }
+//    //Parsing a string to a SQL date
+//    public static Date parseData(String dateStr){
+//        try{
+//            java.util.Date utilDate = new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse(dateStr);
+//            return new Date(utilDate.getTime());
+//        } catch (ParseException e) {
+//            throw new RuntimeException("Invalid date format: " + dateStr);
+//        }
+//    }
+
+
     // Convert java.sql.Date → java.time.LocalDate
     public static LocalDate toLocalDate(Date sqlDate) {
         return sqlDate != null ? sqlDate.toLocalDate() : null;
@@ -51,5 +55,9 @@ public class DateUtils {
     //Get the current timestamp
     public static Timestamp getCurrentTimestamp() {
         return new Timestamp(System.currentTimeMillis());
+    }
+    //Use this for manually printing the ATTRIBUTES OF ENTITIES
+    public static String formatLocalDateTime(LocalDateTime dateTime) {
+        return dateTime != null ? dateTime.format(DATE_TIME_FORMATTER) : null;
     }
 }
