@@ -42,7 +42,7 @@ public class StudentDAO implements DAO<Student, Integer> {
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("StudentDAO.getAll()",e,LOGGER);
         }
-        DatabaseUtils.printSQLConnectionClose("getAll()",StudentDAO.class);
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getAll()",StudentDAO.class);
         return students;
     }
 
@@ -121,7 +121,7 @@ public class StudentDAO implements DAO<Student, Integer> {
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("StudentDAO.getOne() (BY ID)",e,LOGGER);
         }
-        DatabaseUtils.printSQLConnectionClose("getOne().null",StudentDAO.class);
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getOne().null",StudentDAO.class);
         return Optional.empty();
     }
 
@@ -139,13 +139,13 @@ public class StudentDAO implements DAO<Student, Integer> {
                 TODO: DO DatabaseUtils.foundEntity
                  */
                 System.out.println("Student found with student number " + studentNumber);
-                DatabaseUtils.printSQLConnectionClose("getStudentByStudentNumber()",StudentDAO.class);
+                DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByStudentNumber()",StudentDAO.class);
                 return Optional.of(students.get(0));
             }
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("StudentDAO.getStudentByStudentNumber()",e,LOGGER);
         }
-        DatabaseUtils.printSQLConnectionClose("getStudentByStudentNumber().null",StudentDAO.class);
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByStudentNumber().null",StudentDAO.class);
         return Optional.empty();
     }
 
@@ -163,13 +163,13 @@ public class StudentDAO implements DAO<Student, Integer> {
                 TODO: DO DatabaseUtils.foundEntity
                  */
                 System.out.println("Student found with student email " + email);
-                DatabaseUtils.printSQLConnectionClose("getStudentByEmail()",StudentDAO.class);
+                DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByEmail()",StudentDAO.class);
                 return Optional.of(students.get(0));
             }
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("StudentDAO.getStudentByEmail()",e,LOGGER);
         }
-        DatabaseUtils.printSQLConnectionClose("getStudentByEmail().null",StudentDAO.class);
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByEmail().null",StudentDAO.class);
         return Optional.empty();
     }
 

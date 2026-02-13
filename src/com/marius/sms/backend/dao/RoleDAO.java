@@ -33,7 +33,7 @@ public class RoleDAO implements DAO<Role, Integer> {
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("RoleDAO.getAll()", e, LOGGER);
         }
-        System.out.println("Connection closed " + getClass().getName());
+        DatabaseUtils.printSQLConnectionClose("RoleDAO.getAll()", RoleDAO.class);
         return roles;
     }
 
@@ -52,9 +52,8 @@ public class RoleDAO implements DAO<Role, Integer> {
                 if (affectedRows == 0) {
                     throw new SQLException("Failed to insert new role.");
                 }
-
                 connection.commit();
-                System.out.println("Role created successfully with id "+entity.getRole_id());
+                DatabaseUtils.printNewEntityCreated(entity, entity.getRole_id());
                 return entity;
             }
         } catch (SQLException e) {
@@ -71,7 +70,7 @@ public class RoleDAO implements DAO<Role, Integer> {
         } finally {
             if (connection != null) {
                 try {
-                    System.out.println("Connection closed " + getClass().getName());
+                    DatabaseUtils.printSQLConnectionClose("RoleDAO.create()", RoleDAO.class);
                     connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException ez) {
@@ -93,13 +92,13 @@ public class RoleDAO implements DAO<Role, Integer> {
             List<Role> roles = processResultSet(resultSet);
             if(!roles.isEmpty()){
                 System.out.println("Role found with id " + roleId);
-                System.out.println("Connection closed " + getClass().getName());
+                DatabaseUtils.printSQLConnectionClose("RoleDAO.getOne()", RoleDAO.class);
                 return Optional.of(roles.get(0));
             }
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("RoleDAO.getOne()", e, LOGGER);
         }
-        System.out.println("Connection closed null" + getClass().getName());
+        DatabaseUtils.printSQLConnectionClose("RoleDAO.getOne().null", RoleDAO.class);
         return Optional.empty();
     }
 
@@ -132,12 +131,11 @@ public class RoleDAO implements DAO<Role, Integer> {
                 }
             }
             DatabaseUtils.handleSQLException("RoleDAO.update()", e, LOGGER);
-
             return null;
         } finally {
             if (connection != null) {
                 try {
-                    System.out.println("Connection closed " + getClass().getName());
+                    DatabaseUtils.printSQLConnectionClose("RoleDAO.update()", RoleDAO.class);
                     connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException ignored) {}
@@ -173,7 +171,7 @@ public class RoleDAO implements DAO<Role, Integer> {
         } finally {
             if (connection != null) {
                 try {
-                    System.out.println("Connection closed " + getClass().getName());
+                    DatabaseUtils.printSQLConnectionClose("RoleDAO.delete()", RoleDAO.class);
                     connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException e) {
