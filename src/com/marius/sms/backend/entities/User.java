@@ -1,26 +1,36 @@
 package com.marius.sms.backend.entities;
 
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 
 public class User {
-    private Integer user_id;
-    private String username;
-    private String password_hash;
-    private Integer role_id;
-    private Integer student_id; // only for student users
-    private Timestamp created_at;
+    protected Integer user_id;
+    protected String username;
+    protected String email;
+    protected String password_hash;
+    protected Integer role_id;
+    protected Integer student_id; // only for student users
+    protected LocalDateTime created_at;
 
     public User() { }
 
-    public User(Integer user_id, String username, String password_hash, Integer role_id, Integer student_id, Timestamp created_at) {
+    public User(int user_id, String username, String email, String password_hash,
+                int role_id, LocalDateTime created_at) {
         this.user_id = user_id;
         this.username = username;
+        this.email = email;
         this.password_hash = password_hash;
         this.role_id = role_id;
-        this.student_id = student_id;
         this.created_at = created_at;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public Integer getUser_id() { return user_id; }
     public void setUser_id(Integer user_id) { this.user_id = user_id; }
 
@@ -36,14 +46,15 @@ public class User {
     public Integer getStudent_id() { return student_id; }
     public void setStudent_id(Integer student_id) { this.student_id = student_id; }
 
-    public Timestamp getCreated_at() { return created_at; }
-    public void setCreated_at(Timestamp created_at) { this.created_at = created_at; }
+    public LocalDateTime getCreated_at() { return created_at; }
+    public void setCreated_at(LocalDateTime created_at) { this.created_at = created_at; }
 
     @Override
     public String toString() {
         return "User{" +
                 "user_id=" + user_id +
                 ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", password_hash='" + password_hash + '\'' +
                 ", role_id=" + role_id +
                 ", student_id=" + student_id +

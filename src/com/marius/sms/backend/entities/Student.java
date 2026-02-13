@@ -5,26 +5,26 @@ import java.time.LocalDateTime;
 
 import java.time.LocalDateTime;
 
-public class Student {
+public class Student extends User {
     private Integer student_id;
     private String student_number;
     private String first_name;
     private String last_name;
-    private String email;
     private LocalDate date_of_birth;
     private LocalDateTime created_at;
 
-    public Student() { }
+    public Student() {
+        super();
+    }
 
-    public Student(Integer student_id, String student_number, String first_name, String last_name, String email, LocalDate date_of_birth, LocalDateTime created_at) {
+    public Student(int user_id, String username, String email, String password_hash, int role_id,
+                   LocalDateTime created_at, int student_id, String student_number, LocalDate date_of_birth) {
+        super(user_id, username, email, password_hash, role_id, created_at);
         this.student_id = student_id;
         this.student_number = student_number;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.email = email;
         this.date_of_birth = date_of_birth;
-        this.created_at = created_at;
     }
+
 
     public Integer getStudent_id() {
         return student_id;
@@ -54,12 +54,6 @@ public class Student {
         this.last_name = last_name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public LocalDate getDate_of_birth() {
         return date_of_birth;
@@ -82,7 +76,6 @@ public class Student {
                 ", student_number='" + student_number + '\'' +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
-                ", email='" + email + '\'' +
                 ", date_of_birth=" + date_of_birth +
                 ", created_at=" + created_at +
                 '}';

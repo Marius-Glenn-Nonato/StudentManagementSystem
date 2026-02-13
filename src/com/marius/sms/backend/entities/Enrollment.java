@@ -1,4 +1,4 @@
-package com.marius.sms.backend.entity;
+package com.marius.sms.backend.entities;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -7,12 +7,12 @@ public class Enrollment {
     private Integer enrollment_id;
     private Integer student_id;
     private Integer course_id;
-    private BigDecimal grade;
+    private double grade;
     private Timestamp enrolled_at;
 
     public Enrollment() { }
 
-    public Enrollment(Integer enrollment_id, Integer student_id, Integer course_id, BigDecimal grade, Timestamp enrolled_at) {
+    public Enrollment(Integer enrollment_id, Integer student_id, Integer course_id, double grade, Timestamp enrolled_at) {
         this.enrollment_id = enrollment_id;
         this.student_id = student_id;
         this.course_id = course_id;
@@ -29,8 +29,8 @@ public class Enrollment {
     public Integer getCourse_id() { return course_id; }
     public void setCourse_id(Integer course_id) { this.course_id = course_id; }
 
-    public BigDecimal getGrade() { return grade; }
-    public void setGrade(BigDecimal grade) { this.grade = grade; }
+    public double getGrade() { return grade; }
+    public void setGrade(double grade) { this.grade = grade; }
 
     public Timestamp getEnrolled_at() { return enrolled_at; }
     public void setEnrolled_at(Timestamp enrolled_at) { this.enrolled_at = enrolled_at; }

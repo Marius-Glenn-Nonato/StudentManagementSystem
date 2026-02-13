@@ -1,4 +1,4 @@
-package com.marius.sms.backend.entity;
+package com.marius.sms.backend.entities;
 
 import java.sql.Timestamp;
 
@@ -7,16 +7,18 @@ public class Course {
     private String course_code;
     private String course_name;
     private Integer credits;
+    private Integer teacher_id;
     private Timestamp created_at;
 
     public Course() { }
 
-    public Course(Integer course_id, String course_code, String course_name, Integer credits, Timestamp created_at) {
+    public Course(Integer course_id, String course_code, String course_name, Integer credits, Timestamp created_at, Integer teacher_id) {
         this.course_id = course_id;
         this.course_code = course_code;
         this.course_name = course_name;
         this.credits = credits;
         this.created_at = created_at;
+        this.teacher_id = teacher_id;
     }
 
     public Integer getCourse_id() { return course_id; }
@@ -34,6 +36,15 @@ public class Course {
     public Timestamp getCreated_at() { return created_at; }
     public void setCreated_at(Timestamp created_at) { this.created_at = created_at; }
 
+
+    public Integer getTeacher_id() {
+        return teacher_id;
+    }
+
+    public void setTeacher_id(Integer teacher_id) {
+        this.teacher_id = teacher_id;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
@@ -41,6 +52,7 @@ public class Course {
                 ", course_code='" + course_code + '\'' +
                 ", course_name='" + course_name + '\'' +
                 ", credits=" + credits +
+                ", teacher_id=" + teacher_id +
                 ", created_at=" + created_at +
                 '}';
     }
