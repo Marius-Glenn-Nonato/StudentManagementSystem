@@ -22,12 +22,13 @@ public class StudentDAO implements DAO<Student, Integer> {
 
     private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (student_number, first_name, last_name, email, date_of_birth, created_at) VALUES (?,?,?,?,?,?)";
 
+    private static final String SQL_UPDATE_STUDENT_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=?, last_name=?, email=?, date_of_birth=? WHERE student_id=?";
     private static final String SQL_UPDATE_STUDENT_EMAIL_QUERY = "UPDATE "+TABLE_NAME+" SET email=? WHERE student_number=?";
     private static final String SQL_UPDATE_STUDENT_FIRST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=? WHERE student_number=?";
     private static final String SQL_UPDATE_STUDENT_LAST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET last_name=? WHERE student_number=?";
     private static final String SQL_UPDATE_STUDENT_DATE_OF_BIRTH_QUERY = "UPDATE "+TABLE_NAME+" SET date_of_birth=? WHERE student_number=?";
 
-    private static final String SQL_DELETE_STUDENT_QUERY = "DELETE FROM "+TABLE_NAME+" WHERE student_number=?";
+    private static final String SQL_DELETE_STUDENT_QUERY = "DELETE FROM "+TABLE_NAME+" WHERE student_id=?";
 
 
     @Override
@@ -176,7 +177,48 @@ public class StudentDAO implements DAO<Student, Integer> {
     //--------------------UPDATE------------------------------
     @Override
     public Student update(Student entity) {
-       return null;
+        Connection connection = null;
+        try {
+            connection = DatabaseUtils.getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_STUDENT_QUERY)) {
+                ps.setString(1, entity.getFirst_name());
+                ps.setString(2, entity.getLast_name());
+                ps.setString(3, entity.getEmail());
+                ps.setDate(4, DateUtils.toSqlDate(entity.getDate_of_birth()));
+                ps.setInt(5, entity.getStudent_id());
+
+                int affectedRows = ps.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("StudentDAO.update(): Student not found with id " + entity.getStudent_id());
+                }
+            }
+            connection.commit();
+            System.out.println("Student updated with id " + entity.getStudent_id());
+            return entity;
+
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("StudentDAO.update().rollback", ex, LOGGER);
+                }
+            }
+            DatabaseUtils.handleSQLException("StudentDAO.update()", e, LOGGER);
+            return null;
+        } finally {
+            if (connection != null) {
+                try {
+                    DatabaseUtils.printSQLConnectionClose("StudentDAO.update()", StudentDAO.class);
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("StudentDAO.update().finally.close", ex, LOGGER);
+                }
+            }
+        }
     }
     //Update Student Email
     public Student updateEmail(Student entity) {
@@ -328,9 +370,6 @@ public class StudentDAO implements DAO<Student, Integer> {
                 }
             }
             connection.commit();
-            /*
-                TODO: DO DatabaseUtils.updatedEntity()
-                 */
             System.out.println("Student updated date of birth with id " + entity.getStudent_number());
             return entity;
         } catch (SQLException e) {
@@ -358,41 +397,39 @@ public class StudentDAO implements DAO<Student, Integer> {
 
     //-------------------DELETE-------------------------------
     @Override
-    public boolean delete(Integer integer) {
+    public boolean delete(Integer studentId) {
         Connection connection = null;
-        try{
+        try {
             connection = DatabaseUtils.getConnection();
             connection.setAutoCommit(false);
-            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_STUDENT_QUERY)){
-                preparedStatement.setInt(1, integer);
-                int affectedRows = preparedStatement.executeUpdate();
+            try (PreparedStatement ps = connection.prepareStatement(SQL_DELETE_STUDENT_QUERY)) {
+                ps.setInt(1, studentId);
+                int affectedRows = ps.executeUpdate();
                 if (affectedRows == 0) {
-                    throw new SQLException("StudentDAO.delete() failed. Student not found with student number "+ integer);
+                    throw new SQLException("StudentDAO.delete(): Student not found with id " + studentId);
                 }
             }
             connection.commit();
-            /**
-             * TODO: DO DatabaseUtils.deleteEntity
-             */
+            DatabaseUtils.printSQLConnectionClose("StudentDAO.delete()", StudentDAO.class);
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             if (connection != null) {
-                try{
+                try {
                     connection.rollback();
                 } catch (SQLException ex) {
-                    DatabaseUtils.handleSQLException("StudentDAO.delete().rollback",ex,LOGGER);
+                    DatabaseUtils.handleSQLException("StudentDAO.delete().rollback", ex, LOGGER);
                 }
             }
-            DatabaseUtils.handleSQLException("StudentDAO.delete().null",e,LOGGER);
+            DatabaseUtils.handleSQLException("StudentDAO.delete().null", e, LOGGER);
             return false;
-        }finally{
-            if(connection != null){
-                try{
-                    DatabaseUtils.printSQLConnectionClose("StudentDAO.delete()",StudentDAO.class);
+        } finally {
+            if (connection != null) {
+                try {
+                    DatabaseUtils.printSQLConnectionClose("StudentDAO.delete().finally", StudentDAO.class);
                     connection.setAutoCommit(true);
                     connection.close();
-                } catch (SQLException e) {
-                    DatabaseUtils.handleSQLException("StudentDAO.delete().close()",e,LOGGER);
+                } catch (SQLException ex) {
+                    DatabaseUtils.handleSQLException("StudentDAO.delete().finally.close", ex, LOGGER);
                 }
             }
         }

@@ -9,7 +9,6 @@ public class User {
     protected String email;
     protected String password_hash;
     protected Integer role_id;
-    protected Integer student_id; // only for student users
     protected LocalDateTime created_at;
 
     public User() { }
@@ -43,8 +42,6 @@ public class User {
     public Integer getRole_id() { return role_id; }
     public void setRole_id(Integer role_id) { this.role_id = role_id; }
 
-    public Integer getStudent_id() { return student_id; }
-    public void setStudent_id(Integer student_id) { this.student_id = student_id; }
 
     public LocalDateTime getCreated_at() { return created_at; }
     public void setCreated_at(LocalDateTime created_at) { this.created_at = created_at; }
@@ -57,7 +54,6 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password_hash='" + password_hash + '\'' +
                 ", role_id=" + role_id +
-                ", student_id=" + student_id +
                 ", created_at=" + created_at +
                 '}';
     }

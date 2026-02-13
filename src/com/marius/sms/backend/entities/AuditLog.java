@@ -1,4 +1,4 @@
-package com.marius.sms.backend.entity;
+package com.marius.sms.backend.entities;
 
 import java.sql.Timestamp;
 
