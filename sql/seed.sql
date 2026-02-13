@@ -1,47 +1,62 @@
+-- =========================================================
+-- Seed Data for SMS Schema
+-- =========================================================
+
 -- ==========================
 -- Roles
 -- ==========================
 INSERT INTO sms.roles (role_name) VALUES
                                       ('ADMIN'),
                                       ('REGISTRAR'),
-                                      ('STUDENT');
-
--- ==========================
--- Students
--- ==========================
-INSERT INTO sms.students
-    (student_number, first_name, last_name, email, date_of_birth)
-    VALUES ('S001', 'Marius', 'Nonato', 'marius.nonato@example.com', '2000-05-15'),
-           ('S002', 'Ton', 'Cruz', 'ton.cruz@example.com', '2001-08-22'),
-           ('S003', 'Yamin', 'Lee', 'yamin.lee@example.com', '2000-12-10');
-
+                                      ('STUDENT'),
+                                      ('TEACHER');
 
 -- ==========================
 -- Users
 -- ==========================
 -- Admin
-INSERT INTO sms.users (username, password_hash, role_id) VALUES
-    ('admin', 'hashed_password_here', 1);
+INSERT INTO sms.users (username, email, password_hash, role_id) VALUES
+    ('admin', 'admin@example.com', 'hashed_password_here', 1);
 
 -- Registrar
-INSERT INTO sms.users (username, password_hash, role_id) VALUES
-    ('registrar', 'hashed_password_here', 2);
+INSERT INTO sms.users (username, email, password_hash, role_id) VALUES
+    ('registrar', 'registrar@example.com', 'hashed_password_here', 2);
 
 -- Student Users
-INSERT INTO sms.users (username, password_hash, role_id, student_id) VALUES
-                                                                         ('marius123', 'hashed_password_here', 3, 1),
-                                                                         ('ton456', 'hashed_password_here', 3, 2),
-                                                              ('yamin789', 'hashed_password_here', 3, 3);
+INSERT INTO sms.users (username, email, password_hash, role_id) VALUES
+                                                                    ('marius123', 'marius.nonato@example.com', 'hashed_password_here', 3),
+                                                                    ('ton456', 'ton.cruz@example.com', 'hashed_password_here', 3),
+                                                                    ('yamin789', 'yamin.lee@example.com', 'hashed_password_here', 3);
 
+-- Teacher Users
+INSERT INTO sms.users (username, email, password_hash, role_id) VALUES
+                                                                    ('alicej', 'alice.johnson@example.com', 'hashed_password_here', 4),
+                                                                    ('bobsmith', 'bob.smith@example.com', 'hashed_password_here', 4);
+
+-- ==========================
+-- Students
+-- ==========================
+INSERT INTO sms.students (user_id, first_name, last_name, student_number, date_of_birth)
+VALUES
+    (3, 'Marius', 'Nonato', 'S001', '2000-05-15'),
+    (4, 'Ton', 'Cruz', 'S002', '2001-08-22'),
+    (5, 'Yamin', 'Lee', 'S003', '2000-12-10');
+
+-- ==========================
+-- Teachers
+-- ==========================
+INSERT INTO sms.teachers (user_id, first_name, last_name, hire_date)
+VALUES
+    (6, 'Alice', 'Johnson', '2015-08-01'),
+    (7, 'Bob', 'Smith', '2018-03-15');
 
 -- ==========================
 -- Courses
 -- ==========================
-INSERT INTO sms.courses (course_code, course_name, credits) VALUES
-                                                                ('CS101', 'Introduction to Computer Science', 3),
-                                                                ('MATH201', 'Calculus II', 4),
-                                                                ('ENG150', 'English Literature', 3);
-
+INSERT INTO sms.courses (course_code, course_name, credits, teacher_id) VALUES
+                                                                            ('CS101', 'Introduction to Computer Science', 3, 1), -- Alice
+                                                                            ('MATH201', 'Calculus II', 4, 2),                     -- Bob
+                                                                            ('ENG150', 'English Literature', 3, NULL);           -- No teacher assigned yet
 
 -- ==========================
 -- Enrollments
@@ -52,7 +67,6 @@ INSERT INTO sms.enrollments (student_id, course_id, grade) VALUES
                                                                (2, 1, 90.0),   -- Ton in CS101
                                                                (2, 3, 85.0),   -- Ton in English Literature
                                                                (3, 2, 92.5);   -- Yamin in Calculus II
-
 
 -- ==========================
 -- Audit Logs
