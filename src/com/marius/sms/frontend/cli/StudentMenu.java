@@ -27,12 +27,11 @@ public class StudentMenu {
 
         boolean running = true;
         while (running) {
-            System.out.println("1. View My Courses");
-            System.out.println("2. View My Grades");
-            System.out.println("3. View My Profile");
-            System.out.println("4. Edit Profile");
-            System.out.println("5. Settings");
-            System.out.println("6. Logout");
+            System.out.println("1. View My Courses and Grades");
+            System.out.println("2. View My Profile");
+            System.out.println("3. Edit Profile");
+            System.out.println("4. Settings");
+            System.out.println("5. Logout");
             System.out.println();
             System.out.print("Enter your choice: ");
             try{

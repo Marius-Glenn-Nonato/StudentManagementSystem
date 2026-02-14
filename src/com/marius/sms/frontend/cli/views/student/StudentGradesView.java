@@ -8,8 +8,8 @@ import com.marius.sms.backend.entities.Student;
 import java.util.List;
 
 public class StudentGradesView {
-    public final Student student;
-    public final StudentDAO studentDAO;
+    private final Student student;
+    private final StudentDAO studentDAO;
 
     public StudentGradesView(Student student) {
         this.student = student;

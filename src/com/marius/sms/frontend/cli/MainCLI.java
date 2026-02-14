@@ -33,7 +33,7 @@ public class MainCLI {
             User authenticatedUser = cliUtils.showLoginPrompt();
             //authenticatedUser = only user data
             if(authenticatedUser != null){
-                //If user exists, get the role and complete User + Subclass data
+                //If user exists, get the role and complete User and User + Subclass data
                 Object completeUserData = authService.getCompleteUserData(authenticatedUser);
                 MenuRouter.routeToProperUserMenu(authenticatedUser, completeUserData);
             }
