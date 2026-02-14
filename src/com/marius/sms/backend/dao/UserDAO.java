@@ -31,10 +31,10 @@ public class UserDAO implements DAO<User,Integer>{
             "DELETE FROM " + TABLE_NAME + " WHERE user_id = ?";
 
     private static final String SQL_GET_USER_LOGIN_INFO_BY_USERNAME_QUERY =
-            "SELECT user_id, username, password_hash, role_id FROM " + TABLE_NAME + " WHERE username = ?";
+            "SELECT user_id, username, password_hash, email , role_id, created_at FROM " + TABLE_NAME + " WHERE username = ?";
 
     private static final String SQL_GET_USER_LOGIN_INFO_BY_EMAIL_QUERY = 
-            "SELECT user_id, username, password_hash, role_id FROM " + TABLE_NAME + " WHERE email = ?";
+            "SELECT user_id, username, password_hash,email, role_id, created_at FROM " + TABLE_NAME + " WHERE email = ?";
 
     @Override
     public List<User> getAll() {
@@ -248,15 +248,19 @@ public class UserDAO implements DAO<User,Integer>{
 
      private List<User> processResultSet(ResultSet rs) throws SQLException {
         List<User> users = new ArrayList<>();
-        while (rs.next()) {
-            User user = new User();
-            user.setUser_id(rs.getInt("user_id"));
-            user.setUsername(rs.getString("username"));
-            user.setEmail(rs.getString("email"));
-            user.setPassword_hash(rs.getString("password_hash"));
-            user.setRole_id(rs.getInt("role_id"));
-            user.setCreated_at(DateUtils.toLocalDateTime(rs.getTimestamp("created_at")));
-            users.add(user);
+        try {
+            while (rs.next()) {
+                User user = new User();
+                user.setUser_id(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword_hash(rs.getString("password_hash"));
+                user.setRole_id(rs.getInt("role_id"));
+                user.setCreated_at(DateUtils.toLocalDateTime(rs.getTimestamp("created_at")));
+                users.add(user);
+            }
+        }catch(SQLException e) {
+            DatabaseUtils.handleSQLException("UserDAO.processResultSet()", e, LOGGER);
         }
         return users;
     }

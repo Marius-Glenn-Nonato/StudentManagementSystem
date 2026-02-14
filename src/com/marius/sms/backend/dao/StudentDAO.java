@@ -13,12 +13,13 @@ import java.util.logging.Logger;
 public class StudentDAO implements DAO<Student, Integer> {
     private static final Logger LOGGER = Logger.getLogger(StudentDAO.class.getName());
     private static final String TABLE_NAME = "sms.students";
-    private static final String SQL_GET_ALL_STUDENTS_QUERY = "SELECT * FROM "+TABLE_NAME;
-    private static final String SQL_GET_STUDENT_BY_ID_QUERY = "SELECT * FROM "+TABLE_NAME+" WHERE student_id = ?";
-    private static final String SQL_GET_STUDENT_BY_LAST_NAME_QUERY = "SELECT * FROM "+TABLE_NAME+" WHERE last_name = ?";
-    private static final String SQL_GET_STUDENT_BY_FIRSTANDLAST_NAME_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE first_name = ? AND last_name = ?";
-    private static final String SQL_GET_STUDENT_BY_EMAIL_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE email = ?";
-    private static final String SQL_GET_STUDENT_BY_STUDENT_NUMBER_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE student_number = ?";
+    private static final String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
+    private static final String SQL_GET_STUDENT_BY_ID_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_id = ?";
+    private static final String SQL_GET_STUDENT_BY_USER_ID_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.user_id = ?";
+    private static final String SQL_GET_STUDENT_BY_LAST_NAME_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.last_name = ?";
+    private static final String SQL_GET_STUDENT_BY_FIRSTANDLAST_NAME_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.first_name = ? AND s.last_name = ?";
+    private static final String SQL_GET_STUDENT_BY_EMAIL_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.email = ?";
+    private static final String SQL_GET_STUDENT_BY_STUDENT_NUMBER_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_number = ?";
 
     private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (student_number, first_name, last_name, email, date_of_birth, created_at) VALUES (?,?,?,?,?,?)";
 
@@ -112,9 +113,6 @@ public class StudentDAO implements DAO<Student, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Student> students = processResultSet(resultSet);
             if(!students.isEmpty()) {
-                /*
-                TODO: DO DatabaseUtils.foundEntity
-                 */
                 System.out.println("Student found with id " + studentId);
                 DatabaseUtils.printSQLConnectionClose("getOne()",StudentDAO.class);
                 return Optional.of(students.get(0));
@@ -123,6 +121,27 @@ public class StudentDAO implements DAO<Student, Integer> {
             DatabaseUtils.handleSQLException("StudentDAO.getOne() (BY ID)",e,LOGGER);
         }
         DatabaseUtils.printSQLConnectionClose("StudentDAO.getOne().null",StudentDAO.class);
+        return Optional.empty();
+    }
+
+    //STUDENT GET BY USER ID
+    public Optional<Student> getStudentByUserId(Integer userId) {
+        try(
+                Connection connection = DatabaseUtils.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_BY_USER_ID_QUERY);
+                ){
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Student> students = processResultSet(resultSet);
+            if(!students.isEmpty()) {
+                System.out.println("Student found with user id " + userId);
+                DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByUserId()",StudentDAO.class);
+                return Optional.of(students.get(0));
+            }
+        } catch (SQLException e) {
+            DatabaseUtils.handleSQLException("StudentDAO.getStudentByUserId()",e,LOGGER);
+        }
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByUserId().null",StudentDAO.class);
         return Optional.empty();
     }
 
@@ -438,13 +457,19 @@ public class StudentDAO implements DAO<Student, Integer> {
         List<Student> students = new ArrayList<>();
         while (resultSet.next()) {
             Student student = new Student();
+            // User data
+            student.setUser_id(resultSet.getInt("user_id"));
+            student.setUsername(resultSet.getString("username"));
+            student.setEmail(resultSet.getString("email"));
+            student.setPassword_hash(resultSet.getString("password_hash"));
+            student.setRole_id(resultSet.getInt("role_id"));
+            student.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("created_at")));
+            // Student data
             student.setStudent_id(resultSet.getInt("student_id"));
             student.setStudent_number(resultSet.getString("student_number"));
             student.setFirst_name(resultSet.getString("first_name"));
             student.setLast_name(resultSet.getString("last_name"));
-            student.setEmail(resultSet.getString("email"));
             student.setDate_of_birth(DateUtils.toLocalDate(resultSet.getDate("date_of_birth")));
-            student.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("created_at")));
             students.add(student);
         }
         return students;
