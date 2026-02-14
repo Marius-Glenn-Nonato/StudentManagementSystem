@@ -1,5 +1,7 @@
 package com.marius.sms.backend.dao;
 
+import com.marius.sms.backend.entities.Course;
+import com.marius.sms.backend.entities.Enrollment;
 import com.marius.sms.backend.entities.Student;
 import com.marius.sms.util.DatabaseUtils;
 import com.marius.sms.util.DateUtils;
@@ -14,11 +16,16 @@ public class StudentDAO implements DAO<Student, Integer> {
     private static final Logger LOGGER = Logger.getLogger(StudentDAO.class.getName());
     private static final String TABLE_NAME = "sms.students";
 
+    //Get all Students
     private static final String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
+    //Get all Students using student_id
     private static final String SQL_GET_STUDENT_BY_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_id = ?";
+    //Get all Students using user_id (for inheritance)
     private static final String SQL_GET_STUDENT_BY_USER_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.user_id = ?";
+    //Get all Students using email
     private static final String SQL_GET_STUDENT_BY_EMAIL_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.email = ?";
-
+    //Get all Students Courses using student_id
+    private static final String SQL_GET_STUDENT_COURSES_QUERY = "SELECT e.enrollment_id, e.student_id, e.grade, e.enrolled_at, c.course_id, c.course_name, c.credits FROM sms.enrollments e JOIN sms.courses c ON e.course_id = c.course_id WHERE e.student_id = ? ";
     private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (first_name, last_name, email, date_of_birth) VALUES (?,?,?,?,?)";
 
     private static final String SQL_UPDATE_STUDENT_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=?, last_name=?, email=?, date_of_birth=? WHERE student_id=?";
@@ -120,7 +127,11 @@ public class StudentDAO implements DAO<Student, Integer> {
         return Optional.empty();
     }
 
-    //STUDENT GET BY USER ID
+    /**
+     * An important method that can get the students info if the user gets the user info first (Inheritance)
+     * @param userId
+     * @return
+     */
     public Optional<Student> getStudentByUserId(Integer userId) {
         try(
                 Connection connection = DatabaseUtils.getConnection();
@@ -141,6 +152,23 @@ public class StudentDAO implements DAO<Student, Integer> {
         return Optional.empty();
     }
 
+    public List<Enrollment> getCoursesOfStudents(Integer studentId){
+        List<Enrollment> enrollmentsOfStudent = new ArrayList<>();
+        try(
+                Connection connection = DatabaseUtils.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_COURSES_QUERY);
+                 ) {
+            preparedStatement.setInt(1,studentId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            DatabaseUtils.printSQLConnectionClose("StudentDAO.getCoursesofStudents()", StudentDAO.class);
+            return processResultSetCoursesOfStudent(resultSet);
+
+        } catch (SQLException e) {
+            DatabaseUtils.handleSQLException("StudentDAO.getCoursesOfStudents()",e,LOGGER);
+        }
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getCoursesOfStudents().null",StudentDAO.class);
+       return null;
+    }
     //STUDENT GET BY STUDENT email
     public Optional<Student> getStudentByEmail(String email) {
         try(
@@ -444,5 +472,27 @@ public class StudentDAO implements DAO<Student, Integer> {
             students.add(student);
         }
         return students;
+    }
+
+    private List<Enrollment> processResultSetCoursesOfStudent(ResultSet resultSet) throws SQLException {
+        List<Enrollment> enrollments = new ArrayList<>();
+        while (resultSet.next()) {
+            Course course = new Course();
+            course.setCourse_id(resultSet.getString("course_id"));
+            course.setCourse_name(resultSet.getString("course_name"));
+            course.setCredits(resultSet.getInt("credits"));
+
+            Student student = new Student();
+            student.setStudent_id(resultSet.getInt("student_id"));
+
+            Enrollment enrollment = new Enrollment();
+            enrollment.setEnrollment_id(resultSet.getInt("enrollment_id"));
+            enrollment.setGrade(resultSet.getDouble("grade"));
+            enrollment.setEnrolled_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("enrolled_at")));
+            enrollment.setStudent(student);
+            enrollment.setCourse(course);
+            enrollments.add(enrollment);
+        }
+        return enrollments;
     }
 }

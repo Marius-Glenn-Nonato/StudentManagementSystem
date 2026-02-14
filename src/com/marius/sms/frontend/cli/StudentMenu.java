@@ -11,6 +11,8 @@ public class StudentMenu {
     private final Student student;
     private final Scanner scanner;
 
+
+    //You already have complete student info: s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at
     public StudentMenu(Student student) {
         this.student = student;
         this.scanner = new Scanner(System.in);
@@ -35,7 +37,7 @@ public class StudentMenu {
             System.out.print("Enter your choice: ");
             try{
                 int choice = Integer.parseInt(scanner.nextLine());
-                running = StudentRouter.studentRouteToOption(choice);
+                running = StudentRouter.studentRouteToOption(choice, student);
             }catch(NumberFormatException e){
                 System.out.println("Please enter a number");
             }catch (InvalidChoiceException ex ){

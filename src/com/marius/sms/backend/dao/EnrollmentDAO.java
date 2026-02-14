@@ -33,59 +33,9 @@ public class EnrollmentDAO {
         return enrollments;
     }
     public Enrollment create(Enrollment entity){
-        Connection connection = null;
-        try{
-            connection = DatabaseUtils.getConnection();
-            connection.setAutoCommit(false);
-            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_ENROLLMENT_QUERY, Statement.RETURN_GENERATED_KEYS)){
-                preparedStatement.setInt(1, entity.getStudent_id());
-                preparedStatement.setDouble(2, entity.getGrade());
-                preparedStatement.setString(3, entity.getCourse_id());
-                int affectedRows = preparedStatement.executeUpdate();
-                if(affectedRows == 0){
-                    throw new SQLException("Failed to insert new enrollment");
-                }
-                try(ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if(generatedKeys.next()){
-                        entity.setEnrollment_id(generatedKeys.getInt(1));
-                    }
-                }
-                connection.commit();
-                DatabaseUtils.printNewEntityCreated(entity, entity.getEnrollment_id());
-                return entity;
-            }
-        }catch (SQLException e){
-            if(connection != null){
-                try{
-                    connection.rollback();
-                }catch(SQLException ex){
-                    DatabaseUtils.handleSQLException("EnrollmentDAO.create().rollback",ex,LOGGER);
-                }
-            }
-            DatabaseUtils.handleSQLException("EnrollmentDAO.create().rollback",e,LOGGER);
-            return null;
-        }finally{
-            if(connection != null) {
-                try {
-                    DatabaseUtils.printSQLConnectionClose("EnrollmentDAO.create()", Enrollment.class);
-                    connection.setAutoCommit(true);
-                    connection.close();
-                } catch (SQLException ez) {
-                    DatabaseUtils.handleSQLException("EnrollmentDAO.create().finally.close()", ez, LOGGER);
-                }
-            }
-        }
+        return null;
     }
     private List<Enrollment> processResultSet(ResultSet rs) throws SQLException {
-        List<Enrollment> enrollments = new ArrayList<>();
-        while(rs.next()) {
-            Enrollment enrollment = new Enrollment();
-            enrollment.setEnrollment_id(rs.getInt("enrollment_id"));
-            enrollment.setStudent_id(rs.getInt("student_id"));
-            enrollment.setGrade(rs.getDouble("grade"));
-            enrollment.setCourse_id(rs.getString("course_id"));
-            enrollments.add(enrollment);
-        }
-        return enrollments;
+       return null;
     }
 }

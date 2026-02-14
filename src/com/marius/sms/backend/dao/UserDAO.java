@@ -39,10 +39,10 @@ public class UserDAO implements DAO<User,Integer>{
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
-        try (Connection connection = DatabaseUtils.getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(SQL_GET_ALL_USERS_QUERY)) {
-
+        try (
+                Connection connection = DatabaseUtils.getConnection();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(SQL_GET_ALL_USERS_QUERY)) {
             users = processResultSet(rs);
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("UserDAO.getAll()", e, LOGGER);
@@ -104,7 +104,8 @@ public class UserDAO implements DAO<User,Integer>{
     @Override
     public Optional<User> getOne(Integer userId) {
         try (Connection conn = DatabaseUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(SQL_GET_USER_BY_ID_QUERY)) {
+             PreparedStatement ps = conn.prepareStatement(SQL_GET_USER_BY_ID_QUERY)
+            ) {
 
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
