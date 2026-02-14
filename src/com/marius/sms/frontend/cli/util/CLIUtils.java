@@ -52,14 +52,18 @@ public class CLIUtils {
                 return user;
             }catch(AuthenticationException e) {
                 attempts++;
-                System.out.println("x "+ e.getMessage());
-                if(attempts >= maxAttempts) {
-                    System.out.println("Attempts remaining: "+ (maxAttempts - attempts));
+                System.out.println();
+                System.out.println("✗ " + e.getMessage());
+                int attemptsRemaining = maxAttempts - attempts;
+                if(attemptsRemaining > 0) {
+                    System.out.println("Attempts remaining: " + attemptsRemaining);
+                    System.out.println("Please try again.");
+                } else {
+                    System.out.println("Maximum login attempts reached. Exiting...");
                 }
-                System.out.println("Please try again.");
+                System.out.println();
             }
         }
-        System.out.println("Maximum login attempts reached. Exiting...");
         return null;
     }
 

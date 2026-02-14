@@ -33,14 +33,12 @@ public class AuthService {
 
         //If user is not found, throw and Exception
         if (!userOpt.isPresent()) {
-            LOGGER.warning("Login attempt failed: User not found with username or email " + usernameOrEmail);
             throw new AuthenticationException("Invalid credentials");
         }
 
         //If username exists, check password if it's correct
         User user = userOpt.get();
         if (!PasswordChecker.verifyPassword(password, user.getPassword_hash())) {
-            LOGGER.warning("Login attempt failed: Invalid password for " + usernameOrEmail);
             throw new AuthenticationException("Invalid credentials");
         }
 

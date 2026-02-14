@@ -7,11 +7,11 @@ import com.marius.sms.backend.security.RoleChecker;
 import com.marius.sms.frontend.cli.StudentMenu;
 import com.marius.sms.frontend.cli.TeacherMenu;
 
-public class Router {
-    public Router(){
+public class MenuRouter {
+    public MenuRouter(){
     }
 
-    public static void routeToMenu(User user, Object completedUserData){
+    public static void routeToProperUserMenu(User user, Object completedUserData){
         if(RoleChecker.isStudent(user)){
             Student student = (Student) completedUserData;
             StudentMenu studentMenu = new StudentMenu(student);
