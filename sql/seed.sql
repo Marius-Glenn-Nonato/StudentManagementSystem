@@ -53,7 +53,7 @@ VALUES
 -- ==========================
 -- Courses
 -- ==========================
-INSERT INTO sms.courses (course_code, course_name, credits, teacher_id) VALUES
+INSERT INTO sms.courses (course_id, course_name, credits, teacher_id) VALUES
                                                                             ('CS101', 'Introduction to Computer Science', 3, 1), -- Alice
                                                                             ('MATH201', 'Calculus II', 4, 2),                     -- Bob
                                                                             ('ENG150', 'English Literature', 3, NULL);           -- No teacher assigned yet
@@ -62,11 +62,11 @@ INSERT INTO sms.courses (course_code, course_name, credits, teacher_id) VALUES
 -- Enrollments
 -- ==========================
 INSERT INTO sms.enrollments (student_id, course_id, grade) VALUES
-                                                               (1, 1, 95.5),   -- Marius in CS101
-                                                               (1, 2, 88.0),   -- Marius in Calculus II
-                                                               (2, 1, 90.0),   -- Ton in CS101
-                                                               (2, 3, 85.0),   -- Ton in English Literature
-                                                               (3, 2, 92.5);   -- Yamin in Calculus II
+                                                               (1, 'CS101', 95.5),   -- Marius in CS101
+                                                               (1, 'MATH201', 88.0),   -- Marius in Calculus II
+                                                               (2, 'CS101', 90.0),   -- Ton in CS101
+                                                               (2, 'ENG150', 85.0),   -- Ton in English Literature
+                                                               (3, 'MATH201', 92.5);   -- Yamin in Calculus II
 
 -- ==========================
 -- Audit Logs

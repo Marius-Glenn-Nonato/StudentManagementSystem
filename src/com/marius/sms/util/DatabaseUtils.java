@@ -34,4 +34,8 @@ public class DatabaseUtils {
     public static void printNewEntityCreated(Object entity, int id) {
         System.out.println("New " + entity.getClass().getName() + " created with id " + id);
     }
+
+    public static void printNewEntityCreated(Object entity, String id) {
+        System.out.println("New " + entity.getClass().getName() + " created with id " + id);
+    }
 }

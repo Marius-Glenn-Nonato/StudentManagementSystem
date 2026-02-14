@@ -109,7 +109,10 @@ public class UserDAO implements DAO<User,Integer>{
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             List<User> users = processResultSet(rs);
-            if (!users.isEmpty()) return Optional.of(users.get(0));
+            if (!users.isEmpty()) {
+                DatabaseUtils.printSQLConnectionClose("UserDAO.getOne()", UserDAO.class);
+                return Optional.of(users.get(0));
+            }
 
         } catch (SQLException e) {
             DatabaseUtils.handleSQLException("UserDAO.getOne()", e, LOGGER);

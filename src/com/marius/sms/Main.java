@@ -1,13 +1,7 @@
 package com.marius.sms;
 
-import com.marius.sms.backend.dao.RoleDAO;
-import com.marius.sms.backend.dao.StudentDAO;
-import com.marius.sms.backend.dao.TeacherDAO;
-import com.marius.sms.backend.dao.UserDAO;
-import com.marius.sms.backend.entities.Role;
-import com.marius.sms.backend.entities.Student;
-import com.marius.sms.backend.entities.Teacher;
-import com.marius.sms.backend.entities.User;
+import com.marius.sms.backend.dao.*;
+import com.marius.sms.backend.entities.*;
 import com.marius.sms.backend.security.PasswordChecker;
 import com.marius.sms.frontend.cli.MainCLI;
 
@@ -57,6 +51,10 @@ public class Main {
         for(Teacher teacher1: teachers){
             System.out.println(teacher1);
         }
-
+        CourseDAO courseDAO = new CourseDAO();
+        Optional<Course> course = courseDAO.getCourseByCourseId("CS");
+        if(course.isPresent()) {
+            System.out.println(course.get());
+        }
     }
 }
