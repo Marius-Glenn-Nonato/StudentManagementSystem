@@ -25,23 +25,26 @@ public class AuthService {
     public User login(String usernameOrEmail, String password) throws AuthenticationException {
         // Try username first
         Optional<User> userOpt = userDAO.getUserLoginUsingUserName(usernameOrEmail);
-        
+
         // If not found by username, try email
         if (!userOpt.isPresent()) {
             userOpt = userDAO.getUserLoginUsingEmail(usernameOrEmail);
         }
 
+        //If user is not found, throw and Exception
         if (!userOpt.isPresent()) {
             LOGGER.warning("Login attempt failed: User not found with username or email " + usernameOrEmail);
             throw new AuthenticationException("Invalid credentials");
         }
 
+        //If username exists, check password if it's correct
         User user = userOpt.get();
         if (!PasswordChecker.verifyPassword(password, user.getPassword_hash())) {
             LOGGER.warning("Login attempt failed: Invalid password for " + usernameOrEmail);
             throw new AuthenticationException("Invalid credentials");
         }
 
+        // If Username and Password is correct, return User(user_id, username, email, password_hash, role_id, created_at)
         LOGGER.info("User " + usernameOrEmail + " logged in successfully");
         return user;
     }

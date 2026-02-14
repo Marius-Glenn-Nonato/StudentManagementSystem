@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 public class StudentDAO implements DAO<Student, Integer> {
     private static final Logger LOGGER = Logger.getLogger(StudentDAO.class.getName());
     private static final String TABLE_NAME = "sms.students";
+
     private static final String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
     private static final String SQL_GET_STUDENT_BY_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_id = ?";
     private static final String SQL_GET_STUDENT_BY_USER_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.user_id = ?";
