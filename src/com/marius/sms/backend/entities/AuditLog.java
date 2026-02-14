@@ -1,6 +1,7 @@
 package com.marius.sms.backend.entities;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class AuditLog {
     private Integer audit_id;
@@ -8,11 +9,11 @@ public class AuditLog {
     private String action;
     private String entity_type;
     private Integer entity_id;
-    private Timestamp created_at;
+    private LocalDateTime created_at;
 
     public AuditLog() { }
 
-    public AuditLog(Integer audit_id, Integer user_id, String action, String entity_type, Integer entity_id, Timestamp created_at) {
+    public AuditLog(Integer audit_id, Integer user_id, String action, String entity_type, Integer entity_id, LocalDateTime created_at) {
         this.audit_id = audit_id;
         this.user_id = user_id;
         this.action = action;
@@ -36,8 +37,8 @@ public class AuditLog {
     public Integer getEntity_id() { return entity_id; }
     public void setEntity_id(Integer entity_id) { this.entity_id = entity_id; }
 
-    public Timestamp getCreated_at() { return created_at; }
-    public void setCreated_at(Timestamp created_at) { this.created_at = created_at; }
+    public LocalDateTime getCreated_at() { return created_at; }
+    public void setCreated_at(LocalDateTime created_at) { this.created_at = created_at; }
 
     @Override
     public String toString() {

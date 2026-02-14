@@ -2,17 +2,18 @@ package com.marius.sms.backend.entities;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Enrollment {
     private Integer enrollment_id;
     private Integer student_id;
-    private Integer course_id;
+    private String course_id;
     private double grade;
-    private Timestamp enrolled_at;
+    private LocalDateTime enrolled_at;
 
     public Enrollment() { }
 
-    public Enrollment(Integer enrollment_id, Integer student_id, Integer course_id, double grade, Timestamp enrolled_at) {
+    public Enrollment(Integer enrollment_id, Integer student_id, String course_id, double grade, LocalDateTime enrolled_at) {
         this.enrollment_id = enrollment_id;
         this.student_id = student_id;
         this.course_id = course_id;
@@ -26,14 +27,14 @@ public class Enrollment {
     public Integer getStudent_id() { return student_id; }
     public void setStudent_id(Integer student_id) { this.student_id = student_id; }
 
-    public Integer getCourse_id() { return course_id; }
-    public void setCourse_id(Integer course_id) { this.course_id = course_id; }
+    public String getCourse_id() { return course_id; }
+    public void setCourse_id(String course_id) { this.course_id = course_id; }
 
     public double getGrade() { return grade; }
     public void setGrade(double grade) { this.grade = grade; }
 
-    public Timestamp getEnrolled_at() { return enrolled_at; }
-    public void setEnrolled_at(Timestamp enrolled_at) { this.enrolled_at = enrolled_at; }
+    public LocalDateTime getEnrolled_at() { return enrolled_at; }
+    public void setEnrolled_at(LocalDateTime enrolled_at) { this.enrolled_at = enrolled_at; }
 
     @Override
     public String toString() {

@@ -89,7 +89,7 @@ public class StudentDAO implements DAO<Student, Integer> {
                     connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException ez) {
-                    DatabaseUtils.handleSQLException("StudentDAO.create().close()",ez,LOGGER);
+                    DatabaseUtils.handleSQLException("StudentDAO.create().finally.close()",ez,LOGGER);
                 }
             }
         }
