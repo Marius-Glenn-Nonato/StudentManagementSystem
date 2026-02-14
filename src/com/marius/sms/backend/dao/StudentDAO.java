@@ -19,15 +19,14 @@ public class StudentDAO implements DAO<Student, Integer> {
     private static final String SQL_GET_STUDENT_BY_LAST_NAME_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.last_name = ?";
     private static final String SQL_GET_STUDENT_BY_FIRSTANDLAST_NAME_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.first_name = ? AND s.last_name = ?";
     private static final String SQL_GET_STUDENT_BY_EMAIL_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.email = ?";
-    private static final String SQL_GET_STUDENT_BY_STUDENT_NUMBER_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_number = ?";
 
-    private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (student_number, first_name, last_name, email, date_of_birth, created_at) VALUES (?,?,?,?,?,?)";
+    private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (first_name, last_name, email, date_of_birth, created_at) VALUES (?,?,?,?,?,?)";
 
     private static final String SQL_UPDATE_STUDENT_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=?, last_name=?, email=?, date_of_birth=? WHERE student_id=?";
-    private static final String SQL_UPDATE_STUDENT_EMAIL_QUERY = "UPDATE "+TABLE_NAME+" SET email=? WHERE student_number=?";
-    private static final String SQL_UPDATE_STUDENT_FIRST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=? WHERE student_number=?";
-    private static final String SQL_UPDATE_STUDENT_LAST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET last_name=? WHERE student_number=?";
-    private static final String SQL_UPDATE_STUDENT_DATE_OF_BIRTH_QUERY = "UPDATE "+TABLE_NAME+" SET date_of_birth=? WHERE student_number=?";
+    private static final String SQL_UPDATE_STUDENT_EMAIL_QUERY = "UPDATE "+TABLE_NAME+" SET email=? WHERE student_id=?";
+    private static final String SQL_UPDATE_STUDENT_FIRST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=? WHERE student_id=?";
+    private static final String SQL_UPDATE_STUDENT_LAST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET last_name=? WHERE student_id=?";
+    private static final String SQL_UPDATE_STUDENT_DATE_OF_BIRTH_QUERY = "UPDATE "+TABLE_NAME+" SET date_of_birth=? WHERE student_id=?";
 
     private static final String SQL_DELETE_STUDENT_QUERY = "DELETE FROM "+TABLE_NAME+" WHERE student_id=?";
 
@@ -56,12 +55,11 @@ public class StudentDAO implements DAO<Student, Integer> {
             connection = DatabaseUtils.getConnection();
             connection.setAutoCommit(false);
             try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_STUDENT_QUERY, Statement.RETURN_GENERATED_KEYS)){
-                preparedStatement.setString(1, entity.getStudent_number());
-                preparedStatement.setString(2, entity.getFirst_name());
-                preparedStatement.setString(3, entity.getLast_name());
-                preparedStatement.setString(4, entity.getEmail());
-                preparedStatement.setDate(5, DateUtils.toSqlDate(entity.getDate_of_birth()));
-                preparedStatement.setTimestamp(6, DateUtils.getCurrentTimestamp());
+                preparedStatement.setString(1, entity.getFirst_name());
+                preparedStatement.setString(2, entity.getLast_name());
+                preparedStatement.setString(3, entity.getEmail());
+                preparedStatement.setDate(4, DateUtils.toSqlDate(entity.getDate_of_birth()));
+                preparedStatement.setTimestamp(5, DateUtils.getCurrentTimestamp());
 
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0) {
@@ -145,31 +143,7 @@ public class StudentDAO implements DAO<Student, Integer> {
         return Optional.empty();
     }
 
-    //STUDENT GET BY STUDENT NUMBER
-    public Optional<Student> getStudentByStudentNumber(String studentNumber) {
-        try(
-                Connection connection = DatabaseUtils.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_BY_STUDENT_NUMBER_QUERY);
-                ){
-            preparedStatement.setString(1, studentNumber);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List<Student> students = processResultSet(resultSet);
-            if(!students.isEmpty()) {
-                /*
-                TODO: DO DatabaseUtils.foundEntity
-                 */
-                System.out.println("Student found with student number " + studentNumber);
-                DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByStudentNumber()",StudentDAO.class);
-                return Optional.of(students.get(0));
-            }
-        } catch (SQLException e) {
-            DatabaseUtils.handleSQLException("StudentDAO.getStudentByStudentNumber()",e,LOGGER);
-        }
-        DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByStudentNumber().null",StudentDAO.class);
-        return Optional.empty();
-    }
-
-    //STUDENT GET BY STUDENT NUMBER
+    //STUDENT GET BY STUDENT email
     public Optional<Student> getStudentByEmail(String email) {
         try(
                 Connection connection = DatabaseUtils.getConnection();
@@ -248,10 +222,10 @@ public class StudentDAO implements DAO<Student, Integer> {
 
             try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STUDENT_EMAIL_QUERY)){
                 preparedStatement.setString(1, entity.getEmail());
-                preparedStatement.setString(2, entity.getStudent_number());
+                preparedStatement.setInt(2, entity.getStudent_id());
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0) {
-                    throw new SQLException("StudentDAO.updateEmail() failed. Student not found with student number "+ entity.getStudent_number());
+                    throw new SQLException("StudentDAO.updateEmail() failed. Student not found with student id "+ entity.getStudent_id());
 
                 }
             }
@@ -259,7 +233,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             /*
                 TODO: DO DatabaseUtils.updatedEntity()
                  */
-            System.out.println("Student updated email with id " + entity.getStudent_number());
+            System.out.println("Student updated email with id " + entity.getStudent_id());
             return entity;
         } catch (SQLException e) {
             if(connection != null){
@@ -292,10 +266,10 @@ public class StudentDAO implements DAO<Student, Integer> {
 
             try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STUDENT_FIRST_NAME_QUERY)){
                 preparedStatement.setString(1, entity.getFirst_name());
-                preparedStatement.setString(2, entity.getStudent_number());
+                preparedStatement.setInt(2, entity.getStudent_id());
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0) {
-                    throw new SQLException("StudentDAO.updateFirstName() failed. Student not found with student number "+ entity.getStudent_number());
+                    throw new SQLException("StudentDAO.updateFirstName() failed. Student not found with student id "+ entity.getStudent_id());
 
                 }
             }
@@ -303,7 +277,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             /*
                 TODO: DO DatabaseUtils.updatedEntity()
                  */
-            System.out.println("Student updated firstname with id " + entity.getStudent_number());
+            System.out.println("Student updated firstname with id " + entity.getStudent_id());
             return entity;
         } catch (SQLException e) {
             if(connection != null){
@@ -337,10 +311,10 @@ public class StudentDAO implements DAO<Student, Integer> {
 
             try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STUDENT_LAST_NAME_QUERY)){
                 preparedStatement.setString(1, entity.getLast_name());
-                preparedStatement.setString(2, entity.getStudent_number());
+                preparedStatement.setInt(2, entity.getStudent_id());
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0) {
-                    throw new SQLException("StudentDAO.updateLastName() failed. Student not found with student number "+ entity.getStudent_number());
+                    throw new SQLException("StudentDAO.updateLastName() failed. Student not found with student id "+ entity.getStudent_id());
 
                 }
             }
@@ -348,7 +322,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             /*
                 TODO: DO DatabaseUtils.updatedEntity()
                  */
-            System.out.println("Student updated lastname with id " + entity.getStudent_number());
+            System.out.println("Student updated lastname with id " + entity.getStudent_id());
             return entity;
         } catch (SQLException e) {
             if(connection != null){
@@ -381,15 +355,15 @@ public class StudentDAO implements DAO<Student, Integer> {
 
             try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STUDENT_DATE_OF_BIRTH_QUERY)){
                 preparedStatement.setDate(1, DateUtils.toSqlDate(entity.getDate_of_birth()));
-                preparedStatement.setString(2, entity.getStudent_number());
+                preparedStatement.setInt(2, entity.getStudent_id());
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0) {
-                    throw new SQLException("StudentDAO.updateDateOfBirth() failed. Student not found with student number "+ entity.getStudent_number());
+                    throw new SQLException("StudentDAO.updateDateOfBirth() failed. Student not found with student id "+ entity.getStudent_id());
 
                 }
             }
             connection.commit();
-            System.out.println("Student updated date of birth with id " + entity.getStudent_number());
+            System.out.println("Student updated date of birth with id " + entity.getStudent_id());
             return entity;
         } catch (SQLException e) {
             if(connection != null){
@@ -466,7 +440,6 @@ public class StudentDAO implements DAO<Student, Integer> {
             student.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("created_at")));
             // Student data
             student.setStudent_id(resultSet.getInt("student_id"));
-            student.setStudent_number(resultSet.getString("student_number"));
             student.setFirst_name(resultSet.getString("first_name"));
             student.setLast_name(resultSet.getString("last_name"));
             student.setDate_of_birth(DateUtils.toLocalDate(resultSet.getDate("date_of_birth")));

@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 public class Student extends User {
     private Integer student_id;
-    private String student_number;
     private String first_name;
     private String last_name;
     private LocalDate date_of_birth;
@@ -18,10 +17,9 @@ public class Student extends User {
     }
 
     public Student(int user_id, String username, String email, String password_hash, int role_id,
-                   LocalDateTime created_at, int student_id, String student_number, LocalDate date_of_birth) {
+                   LocalDateTime created_at, int student_id, LocalDate date_of_birth) {
         super(user_id, username, email, password_hash, role_id, created_at);
         this.student_id = student_id;
-        this.student_number = student_number;
         this.date_of_birth = date_of_birth;
     }
 
@@ -33,12 +31,6 @@ public class Student extends User {
         this.student_id = student_id;
     }
 
-    public String getStudent_number() {
-        return student_number;
-    }
-    public void setStudent_number(String student_number) {
-        this.student_number = student_number;
-    }
 
     public String getFirst_name() {
         return first_name;
@@ -73,7 +65,6 @@ public class Student extends User {
     public String toString() {
         return "Student{" +
                 "student_id=" + student_id +
-                ", student_number='" + student_number + '\'' +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", date_of_birth=" + date_of_birth +

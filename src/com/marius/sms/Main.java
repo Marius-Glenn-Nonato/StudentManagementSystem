@@ -22,28 +22,28 @@ public class Main {
 //        mainCLI.start();
 
 
-        // Previous test code - commented out
-        RoleDAO dao = new RoleDAO();
-        List<Role> roles = dao.getAll();
-        for (Role role : roles) {
-            System.out.println(role);
-        }
-
-        StudentDAO studentDAO = new StudentDAO();
-        List<Student> students = studentDAO.getAll();
-        for (Student student : students) {
-            System.out.println(student);
-        }
-        Optional<Student> studentOptional = studentDAO.getStudentByStudentNumber("S001");
-        if(studentOptional.isPresent()) {
-            Student student = studentOptional.get();
-            System.out.println(student);
-        }
-        UserDAO userDAO = new UserDAO();
-        Optional<User> user = userDAO.getUserLoginUsingUserName("marius123");
-        if(user.isPresent()) {
-            System.out.println(user.get());
-        }
+//        // Previous test code - commented out
+//        RoleDAO dao = new RoleDAO();
+//        List<Role> roles = dao.getAll();
+//        for (Role role : roles) {
+//            System.out.println(role);
+//        }
+//
+//        StudentDAO studentDAO = new StudentDAO();
+//        List<Student> students = studentDAO.getAll();
+//        for (Student student : students) {
+//            System.out.println(student);
+//        }
+//        Optional<Student> studentOptional = studentDAO.getStudentByStudentNumber("S001");
+//        if(studentOptional.isPresent()) {
+//            Student student = studentOptional.get();
+//            System.out.println(student);
+//        }
+//        UserDAO userDAO = new UserDAO();
+//        Optional<User> user = userDAO.getUserLoginUsingUserName("marius123");
+//        if(user.isPresent()) {
+//            System.out.println(user.get());
+//        }
 
     }
 }

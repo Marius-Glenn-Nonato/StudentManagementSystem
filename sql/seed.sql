@@ -36,11 +36,11 @@ INSERT INTO sms.users (username, email, password_hash, role_id) VALUES
 -- ==========================
 -- Students
 -- ==========================
-INSERT INTO sms.students (user_id, first_name, last_name, student_number, date_of_birth)
+INSERT INTO sms.students (user_id, first_name, last_name, date_of_birth)
 VALUES
-    (3, 'Marius', 'Nonato', 'S001', '2000-05-15'),
-    (4, 'Ton', 'Cruz', 'S002', '2001-08-22'),
-    (5, 'Yamin', 'Lee', 'S003', '2000-12-10');
+    (3, 'Marius', 'Nonato',  '2000-05-15'),
+    (4, 'Ton', 'Cruz', '2001-08-22'),
+    (5, 'Yamin', 'Lee', '2000-12-10');
 
 -- ==========================
 -- Teachers
