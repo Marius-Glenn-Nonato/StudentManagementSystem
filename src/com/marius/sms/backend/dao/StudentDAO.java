@@ -100,7 +100,7 @@ public class StudentDAO implements DAO<Student, Integer> {
 
 
     //----------------------SELECT-----------------------------
-    //STUDENT GET BY ID
+    //STUDENT GET BY STUDENT_ID
     @Override
     public Optional<Student> getOne(Integer studentId) {
         try(

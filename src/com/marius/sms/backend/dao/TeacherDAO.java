@@ -17,8 +17,7 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
     private static final String SQL_GET_ALL_TEACHERS_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id";
     private static final String SQL_GET_TEACHER_BY_ID_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE t.teacher_id = ?";
     private static final String SQL_GET_TEACHER_BY_USER_ID_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE t.user_id = ?";
-    private static final String SQL_GET_TEACHER_BY_LAST_NAME_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE t.last_name = ?";
-    private static final String SQL_GET_TEACHER_BY_FIRST_AND_LAST_NAME_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE t.first_name = ? AND t.last_name = ?";
+
     private static final String SQL_GET_TEACHER_BY_EMAIL_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE u.email = ?";
 
     private static final String SQL_INSERT_TEACHER_QUERY = "INSERT INTO " + TABLE_NAME + " (user_id, first_name, last_name, hire_date) VALUES (?,?,?,?)";
@@ -135,6 +134,26 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
         return Optional.empty();
     }
 
+    public Optional<Teacher> getTeacherByEmail(String email) {
+        try(
+                Connection connection = DatabaseUtils.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TEACHER_BY_EMAIL_QUERY);
+                ){
+            preparedStatement.setString(1,email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Teacher> teachers = processResultSet(resultSet);
+            if(!teachers.isEmpty()) {
+                System.out.println("Teacher found with email " + email);
+                DatabaseUtils.printSQLConnectionClose("TeacherDAO.getTeacherByEmail()", TeacherDAO.class);
+                return Optional.of(teachers.get(0));
+            }
+
+        } catch (SQLException e) {
+            DatabaseUtils.handleSQLException("StudentDAO.getTeacherByEmail()", e, LOGGER);
+        }
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getTeacherByEmail()", TeacherDAO.class);
+        return Optional.empty();
+    }
     @Override
     public Teacher update(Teacher entity) {
         Connection connection = null;
