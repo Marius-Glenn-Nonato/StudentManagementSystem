@@ -10,7 +10,6 @@ public class Student extends User {
     private String first_name;
     private String last_name;
     private LocalDate date_of_birth;
-    private LocalDateTime created_at;
 
     public Student() {
         super();
@@ -54,17 +53,17 @@ public class Student extends User {
         this.date_of_birth = date_of_birth;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
-    }
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
-    }
+
 
     @Override
     public String toString() {
         return "Student{" +
-                "student_id=" + student_id +
+                "user_id=" + user_id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password_hash='" + password_hash + '\'' +
+                ", role_id=" + role_id +
+                ", student_id=" + student_id +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", date_of_birth=" + date_of_birth +

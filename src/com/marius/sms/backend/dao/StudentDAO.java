@@ -13,14 +13,12 @@ import java.util.logging.Logger;
 public class StudentDAO implements DAO<Student, Integer> {
     private static final Logger LOGGER = Logger.getLogger(StudentDAO.class.getName());
     private static final String TABLE_NAME = "sms.students";
-    private static final String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
-    private static final String SQL_GET_STUDENT_BY_ID_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_id = ?";
-    private static final String SQL_GET_STUDENT_BY_USER_ID_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.user_id = ?";
-    private static final String SQL_GET_STUDENT_BY_LAST_NAME_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.last_name = ?";
-    private static final String SQL_GET_STUDENT_BY_FIRSTANDLAST_NAME_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.first_name = ? AND s.last_name = ?";
-    private static final String SQL_GET_STUDENT_BY_EMAIL_QUERY = "SELECT s.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.email = ?";
+    private static final String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
+    private static final String SQL_GET_STUDENT_BY_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_id = ?";
+    private static final String SQL_GET_STUDENT_BY_USER_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.user_id = ?";
+    private static final String SQL_GET_STUDENT_BY_EMAIL_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.email = ?";
 
-    private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (first_name, last_name, email, date_of_birth, created_at) VALUES (?,?,?,?,?,?)";
+    private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (first_name, last_name, email, date_of_birth) VALUES (?,?,?,?,?)";
 
     private static final String SQL_UPDATE_STUDENT_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=?, last_name=?, email=?, date_of_birth=? WHERE student_id=?";
     private static final String SQL_UPDATE_STUDENT_EMAIL_QUERY = "UPDATE "+TABLE_NAME+" SET email=? WHERE student_id=?";
@@ -59,7 +57,6 @@ public class StudentDAO implements DAO<Student, Integer> {
                 preparedStatement.setString(2, entity.getLast_name());
                 preparedStatement.setString(3, entity.getEmail());
                 preparedStatement.setDate(4, DateUtils.toSqlDate(entity.getDate_of_birth()));
-                preparedStatement.setTimestamp(5, DateUtils.getCurrentTimestamp());
 
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0) {

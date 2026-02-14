@@ -57,10 +57,16 @@ public class Teacher extends User {
     @Override
     public String toString() {
         return "Teacher{" +
-                "teacher_id=" + teacher_id +
+                "user_id=" + user_id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password_hash='" + password_hash + '\'' +
+                ", role_id=" + role_id +
+                ", teacher_id=" + teacher_id +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", hire_date=" + hire_date +
+                ", created_at=" + created_at +
                 '}';
     }
 }

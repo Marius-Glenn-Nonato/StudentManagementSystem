@@ -14,11 +14,11 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
     private static final Logger LOGGER = Logger.getLogger(TeacherDAO.class.getName());
     private static final String TABLE_NAME = "sms.teachers";
 
-    private static final String SQL_GET_ALL_TEACHERS_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id";
-    private static final String SQL_GET_TEACHER_BY_ID_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE t.teacher_id = ?";
-    private static final String SQL_GET_TEACHER_BY_USER_ID_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE t.user_id = ?";
+    private static final String SQL_GET_ALL_TEACHERS_QUERY = "SELECT t.teacher_id, t.first_name, t.last_name, t.hire_date, t.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id";
+    private static final String SQL_GET_TEACHER_BY_ID_QUERY = "SELECT t.teacher_id, t.first_name, t.last_name, t.hire_date, t.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE t.teacher_id = ?";
+    private static final String SQL_GET_TEACHER_BY_USER_ID_QUERY = "SELECT t.teacher_id, t.first_name, t.last_name, t.hire_date, t.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE t.user_id = ?";
 
-    private static final String SQL_GET_TEACHER_BY_EMAIL_QUERY = "SELECT t.*, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE u.email = ?";
+    private static final String SQL_GET_TEACHER_BY_EMAIL_QUERY = "SELECT t.teacher_id, t.first_name, t.last_name, t.hire_date, t.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " t JOIN sms.users u ON t.user_id = u.user_id WHERE u.email = ?";
 
     private static final String SQL_INSERT_TEACHER_QUERY = "INSERT INTO " + TABLE_NAME + " (user_id, first_name, last_name, hire_date) VALUES (?,?,?,?)";
     private static final String SQL_UPDATE_TEACHER_QUERY = "UPDATE " + TABLE_NAME + " SET first_name=?, last_name=?, hire_date=? WHERE teacher_id=?";
@@ -259,6 +259,7 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
             teacher.setHire_date(DateUtils.toLocalDate(rs.getDate("hire_date")));
             teachers.add(teacher);
         }
+
         return teachers;
     }
 }

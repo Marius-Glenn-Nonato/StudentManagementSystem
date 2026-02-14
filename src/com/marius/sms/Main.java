@@ -2,9 +2,11 @@ package com.marius.sms;
 
 import com.marius.sms.backend.dao.RoleDAO;
 import com.marius.sms.backend.dao.StudentDAO;
+import com.marius.sms.backend.dao.TeacherDAO;
 import com.marius.sms.backend.dao.UserDAO;
 import com.marius.sms.backend.entities.Role;
 import com.marius.sms.backend.entities.Student;
+import com.marius.sms.backend.entities.Teacher;
 import com.marius.sms.backend.entities.User;
 import com.marius.sms.backend.security.PasswordChecker;
 import com.marius.sms.frontend.cli.MainCLI;
@@ -29,21 +31,32 @@ public class Main {
 //            System.out.println(role);
 //        }
 //
-//        StudentDAO studentDAO = new StudentDAO();
-//        List<Student> students = studentDAO.getAll();
-//        for (Student student : students) {
-//            System.out.println(student);
-//        }
-//        Optional<Student> studentOptional = studentDAO.getStudentByStudentNumber("S001");
-//        if(studentOptional.isPresent()) {
-//            Student student = studentOptional.get();
-//            System.out.println(student);
-//        }
-//        UserDAO userDAO = new UserDAO();
-//        Optional<User> user = userDAO.getUserLoginUsingUserName("marius123");
-//        if(user.isPresent()) {
-//            System.out.println(user.get());
-//        }
+        StudentDAO studentDAO = new StudentDAO();
+        List<Student> students = studentDAO.getAll();
+        for (Student student : students) {
+            System.out.println(student);
+        }
+        Optional<Student> studentOptional = studentDAO.getOne(1);
+        if(studentOptional.isPresent()) {
+            Student student = studentOptional.get();
+            System.out.println(student);
+        }
+
+        UserDAO userDAO = new UserDAO();
+        Optional<User> user = userDAO.getUserLoginUsingUserName("marius123");
+        if(user.isPresent()) {
+            System.out.println(user.get());
+        }
+
+        TeacherDAO teacherDAO = new TeacherDAO();
+        Optional<Teacher> teacher = teacherDAO.getOne(1);
+        if(teacher.isPresent()) {
+            System.out.println(teacher.get());
+        }
+        List<Teacher> teachers = teacherDAO.getAll();
+        for(Teacher teacher1: teachers){
+            System.out.println(teacher1);
+        }
 
     }
 }
