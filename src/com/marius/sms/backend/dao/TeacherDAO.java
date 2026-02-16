@@ -145,7 +145,7 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Teacher> teachers = processResultSet(resultSet);
             if(!teachers.isEmpty()) {
-                System.out.println("Teacher found with email " + email);
+                System.out.println("Teacher found with user_email " + email);
                 DatabaseUtils.printSQLConnectionClose("TeacherDAO.getTeacherByEmail()", TeacherDAO.class);
                 return Optional.of(teachers.get(0));
             }
@@ -157,7 +157,7 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
         return Optional.empty();
     }
     //Initial getting of course of teacher, soon to be refactored to getting Schedules
-    //course_id, course_name, credits, teacher_id, created_at
+    //course_id, course_name, credits, teacher_id, user_created_at
     public List<Course> getCoursesOfTeacher (Integer teacherId) {
         List<Course> coursesOfTeacher = new ArrayList<>();
         try(
@@ -286,10 +286,10 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
             // User data
             teacher.setUser_id(rs.getInt("user_id"));
             teacher.setUsername(rs.getString("username"));
-            teacher.setEmail(rs.getString("email"));
+            teacher.setUser_email(rs.getString("user_email"));
             teacher.setPassword_hash(rs.getString("password_hash"));
             teacher.setRole_id(rs.getInt("role_id"));
-            teacher.setCreated_at(DateUtils.toLocalDateTime(rs.getTimestamp("created_at")));
+            teacher.setUser_created_at(DateUtils.toLocalDateTime(rs.getTimestamp("user_created_at")));
             // Teacher data
             teacher.setTeacher_id(rs.getInt("teacher_id"));
             teacher.setFirst_name(rs.getString("first_name"));

@@ -190,7 +190,7 @@ public class CourseDAO implements DAO<Course, Integer> {
             course.setCourse_id(resultSet.getString("course_id"));
             course.setCourse_name(resultSet.getString("course_name"));
             course.setCredits(resultSet.getInt("credits"));
-            course.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("created_at")));
+            course.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("user_created_at")));
             courses.add(course);
         }
         return courses;

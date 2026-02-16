@@ -10,7 +10,7 @@ public class ValidationUtils {
 
     public static void validateEmail(String email) {
         if (!isValidEmail(email)) {
-            throw new InvalidDataException("Invalid email format: " + email);
+            throw new InvalidDataException("Invalid user_email format: " + email);
         }
     }
 

@@ -1,6 +1,4 @@
-package com.marius.sms.backend.dao;
-
-import com.marius.sms.backend.entities.Course;
+package com.marius.sms.backend.entities;
 
 import java.time.LocalTime;
 

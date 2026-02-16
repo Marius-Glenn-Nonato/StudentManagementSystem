@@ -48,7 +48,7 @@ public class AuditLog {
                 ", action='" + action + '\'' +
                 ", entity_type='" + entity_type + '\'' +
                 ", entity_id=" + entity_id +
-                ", created_at=" + created_at +
+                ", user_created_at=" + created_at +
                 '}';
     }
 }

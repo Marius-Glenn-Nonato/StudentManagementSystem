@@ -116,7 +116,7 @@ public class AuditLogDAO implements DAO<AuditLog,Integer> {
             auditLog.setAction(resultSet.getString("action"));
             auditLog.setEntity_type(resultSet.getString("entity_type"));
             auditLog.setEntity_id(resultSet.getInt("entity_id"));
-            auditLog.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("created_at")));
+            auditLog.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("user_created_at")));
             auditLogs.add(auditLog);
         }
         return auditLogs;

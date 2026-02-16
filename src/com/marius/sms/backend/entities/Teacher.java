@@ -59,14 +59,14 @@ public class Teacher extends User {
         return "Teacher{" +
                 "user_id=" + user_id +
                 ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
+                ", user_email='" + user_email + '\'' +
                 ", password_hash='" + password_hash + '\'' +
                 ", role_id=" + role_id +
                 ", teacher_id=" + teacher_id +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", hire_date=" + hire_date +
-                ", created_at=" + created_at +
+                ", user_created_at=" + user_created_at +
                 '}';
     }
 }

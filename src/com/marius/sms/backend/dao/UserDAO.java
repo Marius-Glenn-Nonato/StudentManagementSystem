@@ -142,7 +142,7 @@ public class UserDAO implements DAO<User,Integer>{
         return Optional.empty();
     }
     
-    /** Get login info by email for authentication */
+    /** Get login info by user_email for authentication */
     public Optional<User> getUserLoginUsingEmail(String email) {
         try (Connection conn = DatabaseUtils.getConnection();
              PreparedStatement ps = conn.prepareStatement(SQL_GET_USER_LOGIN_INFO_BY_EMAIL_QUERY)) {
@@ -257,10 +257,10 @@ public class UserDAO implements DAO<User,Integer>{
                 User user = new User();
                 user.setUser_id(rs.getInt("user_id"));
                 user.setUsername(rs.getString("username"));
-                user.setEmail(rs.getString("email"));
+                user.setUser_email(rs.getString("user_email"));
                 user.setPassword_hash(rs.getString("password_hash"));
                 user.setRole_id(rs.getInt("role_id"));
-                user.setCreated_at(DateUtils.toLocalDateTime(rs.getTimestamp("created_at")));
+                user.setUser_created_at(DateUtils.toLocalDateTime(rs.getTimestamp("user_created_at")));
                 users.add(user);
             }
         }catch(SQLException e) {

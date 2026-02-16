@@ -26,7 +26,7 @@ public class AuthService {
         // Try username first
         Optional<User> userOpt = userDAO.getUserLoginUsingUserName(usernameOrEmail);
 
-        // If not found by username, try email
+        // If not found by username, try user_email
         if (!userOpt.isPresent()) {
             userOpt = userDAO.getUserLoginUsingEmail(usernameOrEmail);
         }
@@ -42,7 +42,7 @@ public class AuthService {
             throw new AuthenticationException("Invalid credentials");
         }
 
-        // If Username and Password is correct, return User(user_id, username, email, password_hash, role_id, created_at)
+        // If Username and Password is correct, return User(user_id, username, user_email, password_hash, role_id, user_created_at)
         LOGGER.info("User " + usernameOrEmail + " logged in successfully");
         return user;
     }

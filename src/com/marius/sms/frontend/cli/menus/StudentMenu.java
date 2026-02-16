@@ -12,7 +12,7 @@ public class StudentMenu implements Menu {
     private final StudentRouter studentRouter;
 
 
-    //You already have complete student info: s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at
+    //You already have complete student info: s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at
     public StudentMenu(Student student) {
         this.student = student;
         this.scanner = new Scanner(System.in);

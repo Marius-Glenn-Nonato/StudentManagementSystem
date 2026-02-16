@@ -48,7 +48,7 @@ public class Course {
                 ", course_name='" + course_name + '\'' +
                 ", credits=" + credits +
                 ", teacher_id=" + teacher_id +
-                ", created_at=" + created_at +
+                ", user_created_at=" + created_at +
                 '}';
     }
 }

@@ -16,20 +16,17 @@ public class StudentDAO implements DAO<Student, Integer> {
     private static final Logger LOGGER = Logger.getLogger(StudentDAO.class.getName());
     private static final String TABLE_NAME = "sms.students";
 
-    //Get all Students
-    private static final String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
     //Get all Students using student_id
-    private static final String SQL_GET_STUDENT_BY_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_id = ?";
-    //Get all Students using user_id (for inheritance)
-    private static final String SQL_GET_STUDENT_BY_USER_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.user_id = ?";
-    //Get all Students using email
-    private static final String SQL_GET_STUDENT_BY_EMAIL_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE s.email = ?";
+    private static final String SQL_GET_STUDENT_BY_STUDENT_ID_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.student_id = ?";
+    //Get all Students using user_email
+    private static final String SQL_GET_STUDENT_BY_EMAIL_QUERY = "SELECT s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at FROM " + TABLE_NAME + " s JOIN sms.users u ON s.user_id = u.user_id WHERE u.user_email = ?";
     //Get all Students Courses using student_id
     private static final String SQL_GET_STUDENT_COURSES_QUERY = "SELECT e.enrollment_id, e.student_id, e.grade, e.enrolled_at, c.course_id, c.course_name, c.credits FROM sms.enrollments e JOIN sms.courses c ON e.course_id = c.course_id WHERE e.student_id = ? ";
-    private static final String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (first_name, last_name, email, date_of_birth) VALUES (?,?,?,?,?)";
 
-    private static final String SQL_UPDATE_STUDENT_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=?, last_name=?, email=?, date_of_birth=? WHERE student_id=?";
-    private static final String SQL_UPDATE_STUDENT_EMAIL_QUERY = "UPDATE "+TABLE_NAME+" SET email=? WHERE student_id=?";
+
+
+    private static final String SQL_UPDATE_STUDENT_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=?, last_name=?, user_email=?, date_of_birth=? WHERE student_id=?";
+    private static final String SQL_UPDATE_STUDENT_EMAIL_QUERY = "UPDATE "+TABLE_NAME+" SET user_email=? WHERE student_id=?";
     private static final String SQL_UPDATE_STUDENT_FIRST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET first_name=? WHERE student_id=?";
     private static final String SQL_UPDATE_STUDENT_LAST_NAME_QUERY = "UPDATE "+TABLE_NAME+" SET last_name=? WHERE student_id=?";
     private static final String SQL_UPDATE_STUDENT_DATE_OF_BIRTH_QUERY = "UPDATE "+TABLE_NAME+" SET date_of_birth=? WHERE student_id=?";
@@ -39,6 +36,8 @@ public class StudentDAO implements DAO<Student, Integer> {
 
     @Override
     public List<Student> getAll() {
+        //Get all Students
+        String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.student_id, s.first_name, s.middle_name,s.last_name,s.date_of_birth, s.program_id, s.curriculum_id, s.year_level, s.is_irregular, s.is_active, s.graduated_at, s.user_id, u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
         List<Student> students = new ArrayList<>();
         try(
                 Connection connection = DatabaseUtils.getConnection();
@@ -56,16 +55,24 @@ public class StudentDAO implements DAO<Student, Integer> {
     //----------------------INSERT-----------------------------
     @Override
     public Student create(Student entity) {
+        String SQL_INSERT_STUDENT_QUERY = "INSERT INTO "+TABLE_NAME+" (user_id, first_name, middle_name, last_name, date_of_birth, program_id, curriculum_id, year_level, is_irregular, is_active, graduated_at) VALUES (?,?,?,?,?)";
+
         Connection connection = null;
         try{
             connection = DatabaseUtils.getConnection();
             connection.setAutoCommit(false);
             try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_STUDENT_QUERY, Statement.RETURN_GENERATED_KEYS)){
-                preparedStatement.setString(1, entity.getFirst_name());
-                preparedStatement.setString(2, entity.getLast_name());
-                preparedStatement.setString(3, entity.getEmail());
-                preparedStatement.setDate(4, DateUtils.toSqlDate(entity.getDate_of_birth()));
-
+                preparedStatement.setInt(1, entity.getUser_id());
+                preparedStatement.setString(2, entity.getFirst_name());
+                preparedStatement.setString(3, entity.getMiddle_name());
+                preparedStatement.setString(4, entity.getLast_name());
+                preparedStatement.setDate(5, DateUtils.toSqlDate(entity.getDate_of_birth()));
+                preparedStatement.setInt(6, entity.getProgram_id());
+                preparedStatement.setInt(7, entity.getCurriculum_id());
+                preparedStatement.setInt(8, entity.getYear_level());
+                preparedStatement.setBoolean(9, entity.isIs_irregular());
+                preparedStatement.setBoolean(10, entity.isIs_active());
+                preparedStatement.setDate(11, DateUtils.toSqlDate(entity.getGraduated_at()));
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0) {
                     throw new SQLException("Failed to insert new student.");
@@ -110,7 +117,7 @@ public class StudentDAO implements DAO<Student, Integer> {
     public Optional<Student> getOne(Integer studentId) {
         try(
                 Connection connection = DatabaseUtils.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_BY_ID_QUERY);
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_BY_STUDENT_ID_QUERY);
                 ) {
             preparedStatement.setInt(1, studentId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -133,6 +140,8 @@ public class StudentDAO implements DAO<Student, Integer> {
      * @return
      */
     public Optional<Student> getStudentByUserId(Integer userId) {
+        //Get all Students using user_id (for inheritance)
+        String SQL_GET_STUDENT_BY_USER_ID_QUERY = "SELECT s.student_id, s.first_name, s.middle_name,s.last_name,s.date_of_birth, s.program_id, s.curriculum_id, s.year_level, s.is_irregular, s.is_active, s.graduated_at, s.user_id, u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id WHERE s.user_id = ?";
         try(
                 Connection connection = DatabaseUtils.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_BY_USER_ID_QUERY);
@@ -170,20 +179,20 @@ public class StudentDAO implements DAO<Student, Integer> {
         DatabaseUtils.printSQLConnectionClose("StudentDAO.getCoursesOfStudent().null",StudentDAO.class);
        return null;
     }
-    //STUDENT GET BY STUDENT email
-    public Optional<Student> getStudentByEmail(String email) {
+    //STUDENT GET BY STUDENT user_email
+    public Optional<Student> getStudentByEmail(String user_email) {
         try(
                 Connection connection = DatabaseUtils.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_BY_EMAIL_QUERY);
         ){
-            preparedStatement.setString(1, email);
+            preparedStatement.setString(1, user_email);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Student> students = processResultSet(resultSet);
             if(!students.isEmpty()) {
                 /*
                 TODO: DO DatabaseUtils.foundEntity
                  */
-                System.out.println("Student found with student email " + email);
+                System.out.println("Student found with student user_email " + user_email);
                 DatabaseUtils.printSQLConnectionClose("StudentDAO.getStudentByEmail()",StudentDAO.class);
                 return Optional.of(students.get(0));
             }
@@ -205,7 +214,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             try (PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_STUDENT_QUERY)) {
                 ps.setString(1, entity.getFirst_name());
                 ps.setString(2, entity.getLast_name());
-                ps.setString(3, entity.getEmail());
+                ps.setString(3, entity.getUser_email());
                 ps.setDate(4, DateUtils.toSqlDate(entity.getDate_of_birth()));
                 ps.setInt(5, entity.getStudent_id());
 
@@ -248,7 +257,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             connection.setAutoCommit(false);
 
             try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STUDENT_EMAIL_QUERY)){
-                preparedStatement.setString(1, entity.getEmail());
+                preparedStatement.setString(1, entity.getUser_email());
                 preparedStatement.setInt(2, entity.getStudent_id());
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0) {
@@ -260,7 +269,7 @@ public class StudentDAO implements DAO<Student, Integer> {
             /*
                 TODO: DO DatabaseUtils.updatedEntity()
                  */
-            System.out.println("Student updated email with id " + entity.getStudent_id());
+            System.out.println("Student updated user_email with id " + entity.getStudent_id());
             return entity;
         } catch (SQLException e) {
             if(connection != null){
@@ -454,6 +463,9 @@ public class StudentDAO implements DAO<Student, Integer> {
             }
         }
     }
+
+    // u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at
+    // s.student_id, s.first_name, s.middle_name,s.last_name,s.date_of_birth, s.program_id, s.curriculum_id, s.year_level, s.is_irregular, s.is_active, s.graduated_at, s.user_id,
     private List<Student> processResultSet(ResultSet resultSet) throws SQLException {
         List<Student> students = new ArrayList<>();
         while (resultSet.next()) {
@@ -461,15 +473,22 @@ public class StudentDAO implements DAO<Student, Integer> {
             // User data
             student.setUser_id(resultSet.getInt("user_id"));
             student.setUsername(resultSet.getString("username"));
-            student.setEmail(resultSet.getString("email"));
+            student.setUser_email(resultSet.getString("user_email"));
             student.setPassword_hash(resultSet.getString("password_hash"));
             student.setRole_id(resultSet.getInt("role_id"));
-            student.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("created_at")));
+            student.setUser_created_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("user_created_at")));
             // Student data
             student.setStudent_id(resultSet.getInt("student_id"));
             student.setFirst_name(resultSet.getString("first_name"));
+            student.setMiddle_name("middle_name");
             student.setLast_name(resultSet.getString("last_name"));
             student.setDate_of_birth(DateUtils.toLocalDate(resultSet.getDate("date_of_birth")));
+            student.setProgram_id(resultSet.getInt("program_id"));
+            student.setCurriculum_id(resultSet.getInt("curriculum_id"));
+            student.setYear_level(resultSet.getInt("year_level"));
+            student.setIs_irregular(resultSet.getBoolean("is_irregular"));
+            student.setIs_active(resultSet.getBoolean("is_active"));
+            student.setGraduated_at(DateUtils.toLocalDate(resultSet.getDate("graduated_at")));
             students.add(student);
         }
         return students;

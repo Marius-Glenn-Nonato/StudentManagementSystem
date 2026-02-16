@@ -15,7 +15,7 @@ public class TeacherMenu implements Menu {
         this.scanner = new Scanner(System.in);
         this.teacherRouter = new TeacherRouter();
     }
-    //t.teacher_id, t.first_name, t.last_name, t.hire_date, t.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at
+    //t.teacher_id, t.first_name, t.last_name, t.hire_date, t.user_id, u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at
     public void showMenu() {
         System.out.println("╔═════════════════════════════════════════════╗");
         System.out.println("║         TEACHER MENU                        ║");
