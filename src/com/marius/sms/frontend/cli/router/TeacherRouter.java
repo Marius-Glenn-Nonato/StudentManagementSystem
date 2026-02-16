@@ -6,9 +6,9 @@ import com.marius.sms.frontend.cli.views.student.StudentGradesView;
 import com.marius.sms.frontend.cli.views.student.StudentProfileView;
 import com.marius.sms.frontend.cli.views.teacher.TeacherCoursesView;
 
-public class TeacherRouter {
+public class TeacherRouter implements ObjectRouter<Teacher> {
 
-    public static boolean teacherRouteToView(int choice, Teacher teacher){
+    public boolean routeToView(int choice, Teacher teacher){
         switch (choice) {
             case 1:
                 TeacherCoursesView teacherCoursesView= new TeacherCoursesView(teacher);
@@ -22,4 +22,5 @@ public class TeacherRouter {
         }
 
     }
+
 }

@@ -6,15 +6,17 @@ import com.marius.sms.frontend.cli.router.StudentRouter;
 
 import java.util.Scanner;
 
-public class StudentMenu {
+public class StudentMenu implements Menu {
     private final Student student;
     private final Scanner scanner;
+    private final StudentRouter studentRouter;
 
 
     //You already have complete student info: s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at
     public StudentMenu(Student student) {
         this.student = student;
         this.scanner = new Scanner(System.in);
+        this.studentRouter = new StudentRouter();
     }
     public void showMenu() {
         System.out.println("╔═════════════════════════════════════════════╗");
@@ -38,7 +40,7 @@ public class StudentMenu {
             System.out.print("Enter your choice: ");
             try{
                 int choice = Integer.parseInt(scanner.nextLine());
-                running = StudentRouter.studentRouteToView(choice, student);
+                running = studentRouter.routeToView(choice, student);
             }catch(NumberFormatException e){
                 System.out.println("Please enter a number");
             }catch (InvalidChoiceException ex){

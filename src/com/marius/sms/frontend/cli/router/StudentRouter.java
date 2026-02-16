@@ -5,8 +5,8 @@ import com.marius.sms.backend.exception.InvalidChoiceException;
 import com.marius.sms.frontend.cli.views.student.StudentGradesView;
 import com.marius.sms.frontend.cli.views.student.StudentProfileView;
 
-public class StudentRouter {
-    public static boolean studentRouteToView(int choice, Student student){
+public class StudentRouter implements ObjectRouter<Student> {
+    public boolean routeToView(int choice, Student student){
         switch (choice) {
             case 1:
                 StudentGradesView studentGradesView = new StudentGradesView(student);

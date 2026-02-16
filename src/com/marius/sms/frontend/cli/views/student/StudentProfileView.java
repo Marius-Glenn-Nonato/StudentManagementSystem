@@ -9,14 +9,9 @@ import java.util.Scanner;
 
 public class StudentProfileView {
     private final Student student;
-    private final StudentDAO studentDAO;
-    private final Scanner scanner;
-    private StudentService studentService;
 
     public StudentProfileView(Student student) {
         this.student = student;
-        this.studentDAO = new StudentDAO();
-        this.scanner = new Scanner(System.in);
     }
     //You already have complete student info: s.student_id, s.first_name, s.last_name,s.date_of_birth,s.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at
     public void show() {

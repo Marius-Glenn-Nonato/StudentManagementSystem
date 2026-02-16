@@ -2,17 +2,18 @@ package com.marius.sms.frontend.cli.menus;
 
 import com.marius.sms.backend.entities.Teacher;
 import com.marius.sms.backend.exception.InvalidChoiceException;
-import com.marius.sms.frontend.cli.router.StudentRouter;
 import com.marius.sms.frontend.cli.router.TeacherRouter;
 
 import java.util.Scanner;
 
-public class TeacherMenu {
+public class TeacherMenu implements Menu {
     private final Teacher teacher;
     private final Scanner scanner;
+    private TeacherRouter teacherRouter;
     public TeacherMenu(Teacher teacher) {
         this.teacher = teacher;
         this.scanner = new Scanner(System.in);
+        this.teacherRouter = new TeacherRouter();
     }
     //t.teacher_id, t.first_name, t.last_name, t.hire_date, t.user_id, u.username, u.email, u.password_hash, u.role_id, u.created_at
     public void showMenu() {
@@ -36,7 +37,7 @@ public class TeacherMenu {
             System.out.print("Enter your choice: ");
             try{
                 int choice = Integer.parseInt(scanner.nextLine());
-                running = TeacherRouter.teacherRouteToView(choice, teacher);
+                running = teacherRouter.routeToView(choice, teacher);
             }catch(NumberFormatException e){
                 System.out.println("Please enter a number");
             }catch (InvalidChoiceException ex){

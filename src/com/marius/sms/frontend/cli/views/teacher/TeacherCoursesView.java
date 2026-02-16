@@ -9,8 +9,8 @@ import java.util.List;
 
 public class TeacherCoursesView {
     private Teacher teacher;
-
     private final TeacherService teacherService;
+
     public TeacherCoursesView(Teacher teacher) {
         this.teacher = teacher;
         teacherService = new TeacherService();
