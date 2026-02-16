@@ -1,22 +1,22 @@
-package com.marius.sms.frontend.cli;
+package com.marius.sms.frontend.cli.menus;
 
 import com.marius.sms.backend.dao.UserDAO;
 import com.marius.sms.backend.dao.StudentDAO;
 import com.marius.sms.backend.dao.TeacherDAO;
 import com.marius.sms.backend.entities.User;
 import com.marius.sms.backend.security.AuthService;
-import com.marius.sms.frontend.cli.router.MenuRouter;
+import com.marius.sms.frontend.cli.router.MainMenuRouter;
 import com.marius.sms.frontend.cli.util.CLIUtils;
 
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class MainCLI {
-    private static final Logger LOGGER = Logger.getLogger(MainCLI.class.getName());
+public class MainMenuCLI {
+    private static final Logger LOGGER = Logger.getLogger(MainMenuCLI.class.getName());
     private static Scanner scanner = new Scanner(System.in);
     private final AuthService authService;
 
-    public MainCLI(){
+    public MainMenuCLI(){
         this.authService = new AuthService(new UserDAO(), new StudentDAO(), new TeacherDAO());
         this.scanner = new Scanner(System.in);
     }
@@ -35,7 +35,7 @@ public class MainCLI {
             if(authenticatedUser != null){
                 //If user exists, get the role and complete User and User + Subclass data
                 Object completeUserData = authService.getCompleteUserData(authenticatedUser);
-                MenuRouter.routeToProperUserMenu(authenticatedUser, completeUserData);
+                MainMenuRouter.routeToProperUserMenu(authenticatedUser, completeUserData);
             }
         }catch (Exception e){
             System.out.println(e.getMessage());

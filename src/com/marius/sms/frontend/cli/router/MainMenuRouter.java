@@ -4,11 +4,11 @@ import com.marius.sms.backend.entities.Student;
 import com.marius.sms.backend.entities.Teacher;
 import com.marius.sms.backend.entities.User;
 import com.marius.sms.backend.security.RoleChecker;
-import com.marius.sms.frontend.cli.StudentMenu;
-import com.marius.sms.frontend.cli.TeacherMenu;
+import com.marius.sms.frontend.cli.menus.StudentMenu;
+import com.marius.sms.frontend.cli.menus.TeacherMenu;
 
-public class MenuRouter {
-    public MenuRouter(){
+public class MainMenuRouter {
+    public MainMenuRouter(){
     }
 
     public static void routeToProperUserMenu(User user, Object completedUserData){

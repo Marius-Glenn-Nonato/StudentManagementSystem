@@ -19,6 +19,9 @@ public class StudentGradesView {
     public void show() {
         List<Enrollment> studentCourses = studentDAO.getCoursesOfStudents(student.getStudent_id());
 
+        System.out.println("╔═════════════════════════════════════════════╗");
+        System.out.println("║              STUDENT GRADES                 ║");
+        System.out.println("╚═════════════════════════════════════════════╝");
         // Print table header
         System.out.printf("%-10s | %-30s | %-7s | %-5s%n", "Course ID", "Course Name", "Credits", "Grade");
         System.out.println("---------------------------------------------------------------");

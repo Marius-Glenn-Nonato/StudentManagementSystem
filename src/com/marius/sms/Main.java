@@ -1,12 +1,6 @@
 package com.marius.sms;
 
-import com.marius.sms.backend.dao.*;
-import com.marius.sms.backend.entities.*;
-import com.marius.sms.backend.security.PasswordChecker;
-import com.marius.sms.frontend.cli.MainCLI;
-
-import java.util.List;
-import java.util.Optional;
+import com.marius.sms.frontend.cli.menus.MainMenuCLI;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,8 +8,8 @@ public class Main {
 //        String passcode = PasswordChecker.hashPassword("marius");
 //        System.out.println(passcode);
 //        // Start the SMS application
-        MainCLI mainCLI = new MainCLI();
-        mainCLI.start();
+        MainMenuCLI mainMenuCLI = new MainMenuCLI();
+        mainMenuCLI.start();
 
 
 //        // Previous test code - commented out

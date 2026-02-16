@@ -154,6 +154,9 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
         DatabaseUtils.printSQLConnectionClose("StudentDAO.getTeacherByEmail()", TeacherDAO.class);
         return Optional.empty();
     }
+
+    public List<Courses>
+    //----------------------UPDATE-------------------------
     @Override
     public Teacher update(Teacher entity) {
         Connection connection = null;

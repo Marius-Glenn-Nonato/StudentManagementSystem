@@ -1,10 +1,9 @@
-package com.marius.sms.frontend.cli;
+package com.marius.sms.frontend.cli.menus;
 
 import com.marius.sms.backend.entities.Student;
 import com.marius.sms.backend.exception.InvalidChoiceException;
 import com.marius.sms.frontend.cli.router.StudentRouter;
 
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class StudentMenu {
@@ -28,18 +27,21 @@ public class StudentMenu {
         boolean running = true;
         while (running) {
             System.out.println("1. View My Courses and Grades");
-            System.out.println("2. View My Profile");
-            System.out.println("3. Edit Profile");
-            System.out.println("4. Settings");
-            System.out.println("5. Logout");
+            System.out.println("2. View Schedule - Not yet implemented");
+            System.out.println("3. View Attendance (Absences) - Not yet Implemented");
+            System.out.println("4. View Statement of Accounts- Not yet Implemented");
+            System.out.println("5. View Curriculum Checklist - Not yet Implemented");
+            System.out.println("6. View My Profile");
+            System.out.println("7. Request Edit Profile - Not yet Implemented"); //This is because in the logic using GUI, there's an additional button to request edit then you can modify text fields there
+            System.out.println("8. Logout");
             System.out.println();
             System.out.print("Enter your choice: ");
             try{
                 int choice = Integer.parseInt(scanner.nextLine());
-                running = StudentRouter.studentRouteToOption(choice, student);
+                running = StudentRouter.studentRouteToView(choice, student);
             }catch(NumberFormatException e){
                 System.out.println("Please enter a number");
-            }catch (InvalidChoiceException ex ){
+            }catch (InvalidChoiceException ex){
                 System.out.println("✗ " + ex.getMessage());
             }
 
