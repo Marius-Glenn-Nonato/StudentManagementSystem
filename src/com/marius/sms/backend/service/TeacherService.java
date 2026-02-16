@@ -4,6 +4,7 @@ import com.marius.sms.backend.dao.TeacherDAO;
 import com.marius.sms.backend.entities.Course;
 import com.marius.sms.backend.entities.Teacher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherService {
@@ -11,6 +12,7 @@ public class TeacherService {
 
     public List<Course> getTeacherCourses(Teacher teacher) {
         int teacher_id = teacher.getTeacher_id();
-        return null;
+        List<Course> coursesOfTeacher = teacherDAO.getCoursesOfTeacher(teacher_id);
+        return coursesOfTeacher;
     }
 }

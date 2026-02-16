@@ -1,7 +1,6 @@
 package com.marius.sms.frontend.cli.views.student;
 
 import com.marius.sms.backend.dao.StudentDAO;
-import com.marius.sms.backend.entities.Course;
 import com.marius.sms.backend.entities.Enrollment;
 import com.marius.sms.backend.entities.Student;
 
@@ -17,7 +16,7 @@ public class StudentGradesView {
     }
 
     public void show() {
-        List<Enrollment> studentCourses = studentDAO.getCoursesOfStudents(student.getStudent_id());
+        List<Enrollment> studentCourses = studentDAO.getCoursesOfStudent(student.getStudent_id());
 
         System.out.println("╔═════════════════════════════════════════════╗");
         System.out.println("║              STUDENT GRADES                 ║");

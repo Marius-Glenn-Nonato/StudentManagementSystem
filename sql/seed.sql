@@ -24,13 +24,13 @@ INSERT INTO sms.users (username, email, password_hash, role_id) VALUES
 
 -- Student Users
 INSERT INTO sms.users (username, email, password_hash, role_id) VALUES
-                                                                    ('marius123', 'marius.nonato@example.com', 'hashed_password_here', 3),
+                                                                    ('marius123', 'marius.nonato@example.com', '5b39bfccb1447d4aae30e7a4fb0f4ba37e79ea96ec54b5ba7223979a15e4d0ae', 3),
                                                                     ('ton456', 'ton.cruz@example.com', 'hashed_password_here', 3),
                                                                     ('yamin789', 'yamin.lee@example.com', 'hashed_password_here', 3);
 
 -- Teacher Users
 INSERT INTO sms.users (username, email, password_hash, role_id) VALUES
-                                                                    ('alicej', 'alice.johnson@example.com', 'hashed_password_here', 4),
+                                                                    ('alicej', 'alice.johnson@example.com', '2bd806c97f0e00af1a1fc3328fa763a9269723c8db8fac4f93af71db186d6e90', 4),
                                                                     ('bobsmith', 'bob.smith@example.com', 'hashed_password_here', 4);
 
 -- ==========================

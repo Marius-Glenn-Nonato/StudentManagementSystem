@@ -1,13 +1,14 @@
 package com.marius.sms;
 
+import com.marius.sms.backend.security.PasswordChecker;
 import com.marius.sms.frontend.cli.menus.MainMenuCLI;
 
 public class Main {
     public static void main(String[] args) {
 
-//        String passcode = PasswordChecker.hashPassword("marius");
+//        String passcode = PasswordChecker.hashPassword("alice");
 //        System.out.println(passcode);
-//        // Start the SMS application
+        // Start the SMS application
         MainMenuCLI mainMenuCLI = new MainMenuCLI();
         mainMenuCLI.start();
 

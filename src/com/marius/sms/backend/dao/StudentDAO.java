@@ -152,7 +152,7 @@ public class StudentDAO implements DAO<Student, Integer> {
         return Optional.empty();
     }
 
-    public List<Enrollment> getCoursesOfStudents(Integer studentId){
+    public List<Enrollment> getCoursesOfStudent(Integer studentId){
         List<Enrollment> enrollmentsOfStudent = new ArrayList<>();
         try(
                 Connection connection = DatabaseUtils.getConnection();
@@ -161,12 +161,13 @@ public class StudentDAO implements DAO<Student, Integer> {
             preparedStatement.setInt(1,studentId);
             ResultSet resultSet = preparedStatement.executeQuery();
             DatabaseUtils.printSQLConnectionClose("StudentDAO.getCoursesofStudents()", StudentDAO.class);
-            return processResultSetCoursesOfStudent(resultSet);
+            enrollmentsOfStudent = processResultSetCoursesOfStudent(resultSet);
+            return enrollmentsOfStudent;
 
         } catch (SQLException e) {
-            DatabaseUtils.handleSQLException("StudentDAO.getCoursesOfStudents()",e,LOGGER);
+            DatabaseUtils.handleSQLException("StudentDAO.getCoursesOfStudent()",e,LOGGER);
         }
-        DatabaseUtils.printSQLConnectionClose("StudentDAO.getCoursesOfStudents().null",StudentDAO.class);
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getCoursesOfStudent().null",StudentDAO.class);
        return null;
     }
     //STUDENT GET BY STUDENT email

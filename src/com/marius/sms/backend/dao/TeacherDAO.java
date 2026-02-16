@@ -1,5 +1,6 @@
 package com.marius.sms.backend.dao;
 
+import com.marius.sms.backend.entities.Course;
 import com.marius.sms.backend.entities.Teacher;
 import com.marius.sms.util.DatabaseUtils;
 import com.marius.sms.util.DateUtils;
@@ -23,6 +24,7 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
     private static final String SQL_INSERT_TEACHER_QUERY = "INSERT INTO " + TABLE_NAME + " (user_id, first_name, last_name, hire_date) VALUES (?,?,?,?)";
     private static final String SQL_UPDATE_TEACHER_QUERY = "UPDATE " + TABLE_NAME + " SET first_name=?, last_name=?, hire_date=? WHERE teacher_id=?";
     private static final String SQL_DELETE_TEACHER_QUERY = "DELETE FROM " + TABLE_NAME + " WHERE teacher_id=?";
+    private static final String SQL_GET_COURSES_OF_TEACHER_QUERY = "SELECT course_id, course_name, credits, teacher_id, created_at FROM sms.courses WHERE teacher_id=?";
 
     @Override
     public List<Teacher> getAll() {
@@ -154,8 +156,41 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
         DatabaseUtils.printSQLConnectionClose("StudentDAO.getTeacherByEmail()", TeacherDAO.class);
         return Optional.empty();
     }
+    //Initial getting of course of teacher, soon to be refactored to getting Schedules
+    //course_id, course_name, credits, teacher_id, created_at
+    public List<Course> getCoursesOfTeacher (Integer teacherId) {
+        List<Course> coursesOfTeacher = new ArrayList<>();
+        try(
+                Connection connection = DatabaseUtils.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSES_OF_TEACHER_QUERY);
+                ){
 
-    public List<Courses>
+            preparedStatement.setInt(1, teacherId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            DatabaseUtils.printSQLConnectionClose("TeacherDAO.getCoursesOfTeacher()", TeacherDAO.class);
+            coursesOfTeacher = processResultSetCoursesOfTeacher(resultSet);
+            return coursesOfTeacher;
+        }catch(SQLException e){
+            DatabaseUtils.handleSQLException("TeacherDAO.getCoursesOfTeacher()", e, LOGGER);
+        }
+        DatabaseUtils.printSQLConnectionClose("TeacherDAO.getCoursesOfTeacher().null", TeacherDAO.class);
+        return null;
+    }
+
+    private List<Course> processResultSetCoursesOfTeacher(ResultSet resultSet) throws SQLException {
+        List<Course> coursesOfTeacher = new ArrayList<>();
+        while(resultSet.next()){
+            Course course = new Course();
+            System.out.println("Right here");
+            course.setCourse_id(resultSet.getString("course_id"));
+            course.setCourse_name(resultSet.getString("course_name"));
+            course.setCredits(resultSet.getInt("credits"));
+            course.setTeacher_id(resultSet.getInt("teacher_id"));
+            coursesOfTeacher.add(course);
+        }
+        return coursesOfTeacher;
+    }
+
     //----------------------UPDATE-------------------------
     @Override
     public Teacher update(Teacher entity) {

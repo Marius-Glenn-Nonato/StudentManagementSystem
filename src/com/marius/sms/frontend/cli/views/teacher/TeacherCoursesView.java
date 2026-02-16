@@ -9,11 +9,11 @@ import java.util.List;
 
 public class TeacherCoursesView {
     private Teacher teacher;
-    private final TeacherDAO teacherDAO;
-    private final TeacherService teacherService = new TeacherService();
+
+    private final TeacherService teacherService;
     public TeacherCoursesView(Teacher teacher) {
         this.teacher = teacher;
-        this.teacherDAO = new TeacherDAO();
+        teacherService = new TeacherService();
     }
     public void show() {
         System.out.println("╔═════════════════════════════════════════════╗");
@@ -26,5 +26,15 @@ public class TeacherCoursesView {
 
     private void showTeacherCourses(Teacher teacher) {
         List<Course> listOfCourses = teacherService.getTeacherCourses(teacher);
+
+        System.out.printf("%-10s %-25s %-10s%n",
+                "Course ID", "Course Name", "Credits");
+        System.out.println("------------------------------------------------------");
+
+        for (Course course : listOfCourses) {
+            System.out.printf("%-10s %-25s %-10d%n", course.getCourse_id(), course.getCourse_name(), course.getCredits());
+        }
+        System.out.println("------------------------------------------------------");
     }
+
 }
