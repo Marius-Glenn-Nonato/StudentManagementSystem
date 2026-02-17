@@ -17,12 +17,12 @@ INSERT INTO sms.users (user_id, username, password_hash, role_id, user_email) VA
                                                                                   (1, 'admin',        'hash_admin_placeholder',       1, 'admin@example.com'),
                                                                                   (2, 'registrar',    'hash_registrar_placeholder',   2, 'registrar@example.com'),
 
-                                                                                  (3, 'marius_n',     'hash_marius_placeholder',      3, 'marius.nonato@example.com'),
+                                                                                  (3, 'marius_n',     '5b39bfccb1447d4aae30e7a4fb0f4ba37e79ea96ec54b5ba7223979a15e4d0ae',      3, 'marius.nonato@example.com'),
                                                                                   (4, 'hannah_t',     'hash_hannah_placeholder',      3, 'hannah.ragudos@example.com'),
                                                                                   (5, 'sanchie_g',    'hash_sanchie_placeholder',     3, 'sanchie.guzman@example.com'),
                                                                                   (6, 'janella_e',    'hash_janella_placeholder',     3, 'janella.estrada@example.com'),
 
-                                                                                  (7, 'randy_d',      'hash_randy_placeholder',       4, 'randy.domantay@example.com'),
+                                                                                  (7, 'randy_d',      '6aac1e2f1838b854ba9d1abf94f018fdf70cf4aedfb8e46f513f49854df3be4e',       4, 'randy.domantay@example.com'),
                                                                                   (8, 'rona_d',       'hash_rona_placeholder',        4, 'rona.domantay@example.com'),
                                                                                   (9, 'josephine_d',  'hash_josephine_placeholder',   4, 'josephine.delacruz@example.com');
 
@@ -110,5 +110,36 @@ INSERT INTO sms.attendances (attendance_id, enrollment_id, attendance_date, stat
                                                                                         (1, 1, '2025-08-10', 'PRESENT'),
                                                                                         (2, 1, '2025-08-11', 'LATE'),
                                                                                         (3, 2, '2025-08-10', 'PRESENT');
+-- 10) Offering Schedules
+-- CS111 (offering_id = 1) → MWF
+INSERT INTO sms.offering_schedules
+(course_offering_id, day_of_week, start_time, end_time, room)
+VALUES
+    (1, 'MON', '08:00', '09:30', 'Room 101'),
+    (1, 'WED', '08:00', '09:30', 'Room 101'),
+    (1, 'FRI', '08:00', '09:30', 'Room 101');
+
+-- CS112 (offering_id = 2) → TTh
+INSERT INTO sms.offering_schedules
+(course_offering_id, day_of_week, start_time, end_time, room)
+VALUES
+    (2, 'TUE', '10:00', '11:30', 'Room 102'),
+    (2, 'THU', '10:00', '11:30', 'Room 102');
+
+-- CS122 (offering_id = 3) → MWF (Term 2 - inactive term)
+INSERT INTO sms.offering_schedules
+(course_offering_id, day_of_week, start_time, end_time, room)
+VALUES
+    (3, 'MON', '13:00', '14:30', 'Room 201'),
+    (3, 'WED', '13:00', '14:30', 'Room 201'),
+    (3, 'FRI', '13:00', '14:30', 'Room 201');
+
+-- CS123 (offering_id = 4) → Saturday only
+INSERT INTO sms.offering_schedules
+(course_offering_id, day_of_week, start_time, end_time, room)
+VALUES
+    (4, 'SAT', '09:00', '12:00', 'Lab 1');
+
+
 
 COMMIT;

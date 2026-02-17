@@ -31,10 +31,10 @@ public class UserDAO implements DAO<User,Integer>{
             "DELETE FROM " + TABLE_NAME + " WHERE user_id = ?";
 
     private static final String SQL_GET_USER_LOGIN_INFO_BY_USERNAME_QUERY =
-            "SELECT user_id, username, password_hash, email , role_id, created_at FROM " + TABLE_NAME + " WHERE username = ?";
+            "SELECT user_id, username, password_hash, user_email , role_id, user_created_at FROM " + TABLE_NAME + " WHERE username = ?";
 
     private static final String SQL_GET_USER_LOGIN_INFO_BY_EMAIL_QUERY = 
-            "SELECT user_id, username, password_hash,email, role_id, created_at FROM " + TABLE_NAME + " WHERE email = ?";
+            "SELECT user_id, username, password_hash, user_email, role_id, user_created_at FROM " + TABLE_NAME + " WHERE user_email = ?";
 
     @Override
     public List<User> getAll() {
@@ -143,11 +143,11 @@ public class UserDAO implements DAO<User,Integer>{
     }
     
     /** Get login info by user_email for authentication */
-    public Optional<User> getUserLoginUsingEmail(String email) {
+    public Optional<User> getUserLoginUsingEmail(String user_email) {
         try (Connection conn = DatabaseUtils.getConnection();
              PreparedStatement ps = conn.prepareStatement(SQL_GET_USER_LOGIN_INFO_BY_EMAIL_QUERY)) {
 
-            ps.setString(1, email);
+            ps.setString(1, user_email);
             ResultSet rs = ps.executeQuery();
             List<User> users = processResultSet(rs);
             if (!users.isEmpty()) {

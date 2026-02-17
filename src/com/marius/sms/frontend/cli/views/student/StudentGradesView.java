@@ -16,23 +16,23 @@ public class StudentGradesView {
     }
 
     public void show() {
-        List<Enrollment> studentCourses = studentDAO.getCoursesOfStudent(student.getStudent_id());
-
-        System.out.println("╔═════════════════════════════════════════════╗");
-        System.out.println("║              STUDENT GRADES                 ║");
-        System.out.println("╚═════════════════════════════════════════════╝");
-        // Print table header
-        System.out.printf("%-10s | %-30s | %-7s | %-5s%n", "Course ID", "Course Name", "Credits", "Grade");
-        System.out.println("---------------------------------------------------------------");
-
-        // Print each course
-        for (Enrollment studentCourse : studentCourses) {
-            System.out.printf("%-10s | %-30s | %-7d | %-5s%n",
-                    studentCourse.getCourse().getCourse_id(),
-                    studentCourse.getCourse().getCourse_name(),
-                    studentCourse.getCourse().getCredits(),
-                    studentCourse.getGrade() != null ? studentCourse.getGrade() : "N/A");
-        }
+//        List<Enrollment> studentCourses = studentDAO.getCoursesOfStudent(student.getStudent_id());
+//
+//        System.out.println("╔═════════════════════════════════════════════╗");
+//        System.out.println("║              STUDENT GRADES                 ║");
+//        System.out.println("╚═════════════════════════════════════════════╝");
+//        // Print table header
+//        System.out.printf("%-10s | %-30s | %-7s | %-5s%n", "Course ID", "Course Name", "Credits", "Grade");
+//        System.out.println("---------------------------------------------------------------");
+//
+//        // Print each course
+//        for (Enrollment studentCourse : studentCourses) {
+//            System.out.printf("%-10s | %-30s | %-7d | %-5s%n",
+//                    studentCourse.getCourse().getCourse_id(),
+//                    studentCourse.getCourse().getCourse_name(),
+//                    studentCourse.getCourse().getCredits(),
+//                    studentCourse.getGrade() != null ? studentCourse.getGrade() : "N/A");
+//        }
     }
 
 }

@@ -32,7 +32,7 @@ public class TeacherCoursesView {
         System.out.println("------------------------------------------------------");
 
         for (Course course : listOfCourses) {
-            System.out.printf("%-10s %-25s %-10d%n", course.getCourse_id(), course.getCourse_name(), course.getCredits());
+            System.out.printf("%-10s %-25s %-10d%n", course.getCourse_id(), course.getCourse_name());
         }
         System.out.println("------------------------------------------------------");
     }

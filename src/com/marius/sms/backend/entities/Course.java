@@ -4,51 +4,70 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class Course {
-    private String course_id;
+    private Integer course_id;
+    private String course_code;
     private String course_name;
-    private Integer credits;
-    private Integer teacher_id;
-    private LocalDateTime created_at;
+    private Integer course_units;
+    private LocalDateTime course_created_at;
 
     public Course() { }
 
-    public Course(String course_id,  String course_name, Integer credits, LocalDateTime created_at, Integer teacher_id) {
+    public Course(Integer course_id, String course_code, String course_name, Integer course_units, LocalDateTime course_created_at) {
         this.course_id = course_id;
+        this.course_code = course_code;
         this.course_name = course_name;
-        this.credits = credits;
-        this.created_at = created_at;
-        this.teacher_id = teacher_id;
+        this.course_units = course_units;
+        this.course_created_at = course_created_at;
     }
 
-    public String getCourse_id() { return course_id; }
-    public void setCourse_id(String course_id) { this.course_id = course_id; }
-
-    public String getCourse_name() { return course_name; }
-    public void setCourse_name(String course_name) { this.course_name = course_name; }
-
-    public Integer getCredits() { return credits; }
-    public void setCredits(Integer credits) { this.credits = credits; }
-
-    public LocalDateTime getCreated_at() { return created_at; }
-    public void setCreated_at(LocalDateTime created_at) { this.created_at = created_at; }
-
-
-    public Integer getTeacher_id() {
-        return teacher_id;
+    public LocalDateTime getCourse_created_at() {
+        return course_created_at;
     }
 
-    public void setTeacher_id(Integer teacher_id) {
-        this.teacher_id = teacher_id;
+    public void setCourse_created_at(LocalDateTime course_created_at) {
+        this.course_created_at = course_created_at;
+    }
+
+    public Integer getCourse_units() {
+        return course_units;
+    }
+
+    public void setCourse_units(Integer course_units) {
+        this.course_units = course_units;
+    }
+
+    public String getCourse_name() {
+        return course_name;
+    }
+
+    public void setCourse_name(String course_name) {
+        this.course_name = course_name;
+    }
+
+    public String getCourse_code() {
+        return course_code;
+    }
+
+    public void setCourse_code(String course_code) {
+        this.course_code = course_code;
+    }
+
+    public Integer getCourse_id() {
+        return course_id;
+    }
+
+    public void setCourse_id(Integer course_id) {
+        this.course_id = course_id;
     }
 
     @Override
     public String toString() {
         return "Course{" +
                 "course_id=" + course_id +
+                ", course_code='" + course_code + '\'' +
                 ", course_name='" + course_name + '\'' +
-                ", credits=" + credits +
-                ", teacher_id=" + teacher_id +
-                ", user_created_at=" + created_at +
+                ", course_units=" + course_units +
+                ", course_created_at=" + course_created_at +
                 '}';
     }
 }

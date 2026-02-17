@@ -6,20 +6,43 @@ import java.time.LocalDateTime;
 public class Teacher extends User {
     private int teacher_id;
     private String first_name;
+    private String middle_name;
     private String last_name;
-    private LocalDate hire_date;
+    private boolean isActive;
+    private LocalDate leftAt;
+    private LocalDateTime teacherCreatedAt;
 
     public Teacher(){
         super();
     }
-    public Teacher(int user_id, String username, String email, String password_hash,
-                   int role_id, LocalDateTime created_at, int teacher_id, String first_name,
-                   String last_name, LocalDate hire_date) {
-        super(user_id, username, email, password_hash, role_id, created_at);
-        this.teacher_id = teacher_id;
-        this.first_name = first_name;
+
+    public Teacher(LocalDateTime teacherCreatedAt, LocalDate leftAt, boolean isActive, String last_name, String middle_name, String first_name, int teacher_id) {
+        this.teacherCreatedAt = teacherCreatedAt;
+        this.leftAt = leftAt;
+        this.isActive = isActive;
         this.last_name = last_name;
-        this.hire_date = hire_date;
+        this.middle_name = middle_name;
+        this.first_name = first_name;
+        this.teacher_id = teacher_id;
+    }
+
+    public Teacher(int user_id, String username, String user_email, String password_hash, int role_id, LocalDateTime user_created_at, LocalDateTime teacherCreatedAt, LocalDate leftAt, boolean isActive, String last_name, String middle_name, String first_name, int teacher_id) {
+        super(user_id, username, user_email, password_hash, role_id, user_created_at);
+        this.teacherCreatedAt = teacherCreatedAt;
+        this.leftAt = leftAt;
+        this.isActive = isActive;
+        this.last_name = last_name;
+        this.middle_name = middle_name;
+        this.first_name = first_name;
+        this.teacher_id = teacher_id;
+    }
+
+    public LocalDate getLeftAt() {
+        return leftAt;
+    }
+
+    public void setLeftAt(LocalDate leftAt) {
+        this.leftAt = leftAt;
     }
 
     public int getTeacher_id() {
@@ -38,12 +61,12 @@ public class Teacher extends User {
         this.first_name = first_name;
     }
 
-    public LocalDate getHire_date() {
-        return hire_date;
+    public String getMiddle_name() {
+        return middle_name;
     }
 
-    public void setHire_date(LocalDate hire_date) {
-        this.hire_date = hire_date;
+    public void setMiddle_name(String middle_name) {
+        this.middle_name = middle_name;
     }
 
     public String getLast_name() {
@@ -54,18 +77,37 @@ public class Teacher extends User {
         this.last_name = last_name;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public LocalDateTime getTeacherCreatedAt() {
+        return teacherCreatedAt;
+    }
+
+    public void setTeacherCreatedAt(LocalDateTime teacherCreatedAt) {
+        this.teacherCreatedAt = teacherCreatedAt;
+    }
+
     @Override
     public String toString() {
         return "Teacher{" +
-                "user_id=" + user_id +
+                "teacher_id=" + teacher_id +
+                ", first_name='" + first_name + '\'' +
+                ", middle_name='" + middle_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", isActive=" + isActive +
+                ", leftAt=" + leftAt +
+                ", teacherCreatedAt=" + teacherCreatedAt +
+                ", user_id=" + user_id +
                 ", username='" + username + '\'' +
                 ", user_email='" + user_email + '\'' +
                 ", password_hash='" + password_hash + '\'' +
                 ", role_id=" + role_id +
-                ", teacher_id=" + teacher_id +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
-                ", hire_date=" + hire_date +
                 ", user_created_at=" + user_created_at +
                 '}';
     }
