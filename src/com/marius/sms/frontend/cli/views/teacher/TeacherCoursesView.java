@@ -1,6 +1,5 @@
 package com.marius.sms.frontend.cli.views.teacher;
 
-import com.marius.sms.backend.dao.TeacherDAO;
 import com.marius.sms.backend.entities.Course;
 import com.marius.sms.backend.entities.Teacher;
 import com.marius.sms.backend.service.TeacherService;
@@ -32,7 +31,7 @@ public class TeacherCoursesView {
         System.out.println("------------------------------------------------------");
 
         for (Course course : listOfCourses) {
-            System.out.printf("%-10s %-25s %-10d%n", course.getCourse_id(), course.getCourse_name());
+            System.out.printf("%-10s %-25s %-10d%n", course.getCourseId(), course.getCourseName());
         }
         System.out.println("------------------------------------------------------");
     }

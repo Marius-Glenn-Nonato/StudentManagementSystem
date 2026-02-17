@@ -1,15 +1,12 @@
 package com.marius.sms.backend.dao;
 
-import com.marius.sms.backend.entities.Course;
-import com.marius.sms.backend.entities.Enrollment;
-import com.marius.sms.backend.entities.Student;
+import com.marius.sms.backend.dto.StudentCourseDTO;
+import com.marius.sms.backend.entities.*;
 import com.marius.sms.util.DatabaseUtils;
 import com.marius.sms.util.DateUtils;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class StudentDAO implements DAO<Student, Integer> {
@@ -165,29 +162,101 @@ public class StudentDAO implements DAO<Student, Integer> {
         return Optional.empty();
     }
 
-    public List<Enrollment> getCoursesOfStudent(Integer studentId){
-        //Get all Students Courses using student_id
-        String SQL_GET_STUDENT_COURSES_QUERY =
-                "SELECT e.enrollment_id, e.student_id, e.grade, e.enrolled_at, c.course_id, c.course_name, c.credits " +
-                "FROM sms.enrollments e JOIN sms.courses c ON e.course_id = c.course_id WHERE e.student_id = ? ";
+    /**
+     * I need
+     * enrollmentId from Enrollments to connect to CourseOffering
+     * courseCode from Course
+     * courseName from Course
+     * sectionCode from CourseOffering
+     * teacherName from CourseOffering
+     * Term
+     * dayOfWeek from OfferingSchedule where
+     * startTime from OfferingSchedule
+     * endTime from OfferingSchedule
+     * room from OfferingSchedule
+     */
 
-        List<Enrollment> enrollmentsOfStudent = new ArrayList<>();
-        try(
-                Connection connection = DatabaseUtils.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_STUDENT_COURSES_QUERY);
-                 ) {
-            preparedStatement.setInt(1,studentId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            DatabaseUtils.printSQLConnectionClose("StudentDAO.getCoursesofStudents()", StudentDAO.class);
-            enrollmentsOfStudent = processResultSetCoursesOfStudent(resultSet);
-            return enrollmentsOfStudent;
 
-        } catch (SQLException e) {
-            DatabaseUtils.handleSQLException("StudentDAO.getCoursesOfStudent()",e,LOGGER);
-        }
-        DatabaseUtils.printSQLConnectionClose("StudentDAO.getCoursesOfStudent().null",StudentDAO.class);
-       return null;
-    }
+    /**
+     * This is defecated, done in OfferingScheduleDAO and EnrollmentDAO
+     */
+//    public List<StudentCourseDTO> getCoursesOfStudent(Integer studentId) {
+//        List<StudentCourseDTO> courses = new ArrayList<>();
+//        Map<Integer, StudentCourseDTO> offeringMap = new HashMap<>();
+//
+//        String courseQuery = """
+//        SELECT
+//            e.status AS enrollment_status,
+//            e.final_grade,
+//            co.course_offering_id,
+//            co.section_code,
+//            c.course_code,
+//            c.course_name,
+//            c.course_units,
+//            t.first_name || ' ' || t.last_name AS teacher_name,
+//            tr.start_date,
+//            tr.end_date
+//        FROM sms.enrollments e
+//        JOIN sms.course_offerings co ON e.course_offering_id = co.course_offering_id
+//        JOIN sms.courses c ON co.course_id = c.course_id
+//        JOIN sms.teachers t ON co.teacher_id = t.teacher_id
+//        JOIN sms.terms tr ON co.term_id = tr.term_id
+//        WHERE e.student_id = ?
+//        ORDER BY tr.start_date DESC, co.section_code
+//    """;
+//
+//        String scheduleQuery = """
+//        SELECT
+//            os.course_offering_id,
+//            os.offering_schedule_id,
+//            os.day_of_week,
+//            os.start_time,
+//            os.end_time,
+//            os.room
+//        FROM sms.offering_schedules os
+//        WHERE os.course_offering_id IN (%s)
+//        ORDER BY os.course_offering_id,
+//                 CASE
+//                   WHEN os.day_of_week = 'MON' THEN 1
+//                   WHEN os.day_of_week = 'TUE' THEN 2
+//                   WHEN os.day_of_week = 'WED' THEN 3
+//                   WHEN os.day_of_week = 'THU' THEN 4
+//                   WHEN os.day_of_week = 'FRI' THEN 5
+//                   WHEN os.day_of_week = 'SAT' THEN 6
+//                   WHEN os.day_of_week = 'SUN' THEN 7
+//                 END
+//    """;
+//
+//        try (Connection conn = DatabaseUtils.getConnection();
+//             PreparedStatement ps = conn.prepareStatement(courseQuery)) {
+//
+//            ps.setInt(1, studentId);
+//            ResultSet rs = ps.executeQuery();
+//
+//            // Process ResultSet using helper
+//            processResultSetCoursesOfStudent(rs, courses, offeringMap);
+//
+//            if (!offeringMap.isEmpty()) {
+//                // Build IN clause
+//                String inClause = offeringMap.keySet().toString()
+//                        .replace("[", "")
+//                        .replace("]", "");
+//                String finalScheduleQuery = String.format(scheduleQuery, inClause);
+//
+//                try (PreparedStatement ps2 = conn.prepareStatement(finalScheduleQuery)) {
+//                    ResultSet rs2 = ps2.executeQuery();
+//                    processResultSetSchedules(rs2, offeringMap);
+//                }
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Failed to fetch student courses", e);
+//        }
+//
+//        return courses;
+//    }
+
     //STUDENT GET BY STUDENT user_email
     public Optional<Student> getStudentByEmail(String user_email) {
 //        try(
@@ -508,27 +577,5 @@ public class StudentDAO implements DAO<Student, Integer> {
             students.add(student);
         }
         return students;
-    }
-
-    private List<Enrollment> processResultSetCoursesOfStudent(ResultSet resultSet) throws SQLException {
-        List<Enrollment> enrollments = new ArrayList<>();
-        while (resultSet.next()) {
-            Course course = new Course();
-            course.setCourse_id(resultSet.getString("course_id"));
-            course.setCourse_name(resultSet.getString("course_name"));
-            course.setCredits(resultSet.getInt("credits"));
-
-            Student student = new Student();
-            student.setStudent_id(resultSet.getInt("student_id"));
-
-            Enrollment enrollment = new Enrollment();
-            enrollment.setEnrollment_id(resultSet.getInt("enrollment_id"));
-            enrollment.setGrade(resultSet.getDouble("grade"));
-            enrollment.setEnrolled_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("enrolled_at")));
-            enrollment.setStudent(student);
-            enrollment.setCourse(course);
-            enrollments.add(enrollment);
-        }
-        return enrollments;
     }
 }

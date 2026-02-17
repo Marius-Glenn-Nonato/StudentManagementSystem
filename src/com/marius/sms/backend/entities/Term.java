@@ -3,18 +3,18 @@ package com.marius.sms.backend.entities;
 import java.time.LocalDate;
 
 public class Term {
-    private Integer term_id;
-    private String term_name; // 2026-1,
+    private Integer termId;
+    private String termName; // 2026-1,
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isActive; //signifying one term should be active
 
     public Term(){};
 
-    public Term(LocalDate endDate, Integer term_id, String term_name, LocalDate startDate, boolean isActive) {
+    public Term(LocalDate endDate, Integer termId, String termName, LocalDate startDate, boolean isActive) {
         this.endDate = endDate;
-        this.term_id = term_id;
-        this.term_name = term_name;
+        this.termId = termId;
+        this.termName = termName;
         this.startDate = startDate;
         this.isActive = isActive;
     }
@@ -27,20 +27,20 @@ public class Term {
         this.endDate = endDate;
     }
 
-    public Integer getTerm_id() {
-        return term_id;
+    public Integer getTermId() {
+        return termId;
     }
 
-    public void setTerm_id(Integer term_id) {
-        this.term_id = term_id;
+    public void setTermId(Integer termId) {
+        this.termId = termId;
     }
 
-    public String getTerm_name() {
-        return term_name;
+    public String getTermName() {
+        return termName;
     }
 
-    public void setTerm_name(String term_name) {
-        this.term_name = term_name;
+    public void setTermName(String termName) {
+        this.termName = termName;
     }
 
     public LocalDate getStartDate() {
@@ -62,8 +62,8 @@ public class Term {
     @Override
     public String toString() {
         return "Term{" +
-                "term_id=" + term_id +
-                ", term_name='" + term_name + '\'' +
+                "termId=" + termId +
+                ", termName='" + termName + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", isActive=" + isActive +

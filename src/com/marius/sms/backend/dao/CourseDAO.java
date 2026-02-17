@@ -46,8 +46,8 @@ public class CourseDAO implements DAO<Course, Integer> {
 //            connection = DatabaseUtils.getConnection();
 //            connection.setAutoCommit(false);
 //            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_COURSE_QUERY)) {
-//                preparedStatement.setString(1, entity.getCourse_id());
-//                preparedStatement.setString(2, entity.getCourse_name());
+//                preparedStatement.setString(1, entity.getCourseId());
+//                preparedStatement.setString(2, entity.getCourseName());
 //                preparedStatement.setInt(3, entity.getCredits());
 //                preparedStatement.setInt(4, entity.getTeacher_id());
 //
@@ -57,7 +57,7 @@ public class CourseDAO implements DAO<Course, Integer> {
 //                }
 //
 //                connection.commit();
-//                DatabaseUtils.printNewEntityCreated(entity, entity.getCourse_id());
+//                DatabaseUtils.printNewEntityCreated(entity, entity.getCourseId());
 //                return entity;
 //            }
 //
@@ -111,8 +111,8 @@ public class CourseDAO implements DAO<Course, Integer> {
 //            connection = DatabaseUtils.getConnection();
 //            connection.setAutoCommit(false);
 //            try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_COURSE)) {
-//                preparedStatement.setString(1, entity.getCourse_id());
-//                preparedStatement.setString(2, entity.getCourse_name());
+//                preparedStatement.setString(1, entity.getCourseId());
+//                preparedStatement.setString(2, entity.getCourseName());
 //                preparedStatement.setInt(3, entity.getCredits());
 //                preparedStatement.setInt(4, entity.getTeacher_id());
 //                int affectedRows = preparedStatement.executeUpdate();
@@ -121,7 +121,7 @@ public class CourseDAO implements DAO<Course, Integer> {
 //                }
 //            }
 //            connection.commit();
-//            System.out.println("CourseDAO.update(): Course updated with id: " + entity.getCourse_id());
+//            System.out.println("CourseDAO.update(): Course updated with id: " + entity.getCourseId());
 //            return entity;
 //        }catch (SQLException e){
 //            if(connection != null){
@@ -190,8 +190,8 @@ public class CourseDAO implements DAO<Course, Integer> {
 //        List<Course> courses = new ArrayList<>();
 //        while(resultSet.next()) {
 //            Course course = new Course();
-//            course.setCourse_id(resultSet.getString("course_id"));
-//            course.setCourse_name(resultSet.getString("course_name"));
+//            course.setCourseId(resultSet.getString("course_id"));
+//            course.setCourseName(resultSet.getString("course_name"));
 //            course.setCredits(resultSet.getInt("credits"));
 //            course.setCreated_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("user_created_at")));
 //            courses.add(course);

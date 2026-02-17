@@ -1,73 +1,72 @@
 package com.marius.sms.backend.entities;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class Course {
-    private Integer course_id;
-    private String course_code;
-    private String course_name;
-    private Integer course_units;
-    private LocalDateTime course_created_at;
+    private Integer courseId;
+    private String courseCode;
+    private String courseName;
+    private Integer courseUnits;
+    private LocalDateTime courseCreatedAt;
 
     public Course() { }
 
-    public Course(Integer course_id, String course_code, String course_name, Integer course_units, LocalDateTime course_created_at) {
-        this.course_id = course_id;
-        this.course_code = course_code;
-        this.course_name = course_name;
-        this.course_units = course_units;
-        this.course_created_at = course_created_at;
+    public Course(Integer courseId, String courseCode, String courseName, Integer courseUnits, LocalDateTime courseCreatedAt) {
+        this.courseId = courseId;
+        this.courseCode = courseCode;
+        this.courseName = courseName;
+        this.courseUnits = courseUnits;
+        this.courseCreatedAt = courseCreatedAt;
     }
 
-    public LocalDateTime getCourse_created_at() {
-        return course_created_at;
+    public LocalDateTime getCourseCreatedAt() {
+        return courseCreatedAt;
     }
 
-    public void setCourse_created_at(LocalDateTime course_created_at) {
-        this.course_created_at = course_created_at;
+    public void setCourseCreatedAt(LocalDateTime courseCreatedAt) {
+        this.courseCreatedAt = courseCreatedAt;
     }
 
-    public Integer getCourse_units() {
-        return course_units;
+    public Integer getCourseUnits() {
+        return courseUnits;
     }
 
-    public void setCourse_units(Integer course_units) {
-        this.course_units = course_units;
+    public void setCourseUnits(Integer courseUnits) {
+        this.courseUnits = courseUnits;
     }
 
-    public String getCourse_name() {
-        return course_name;
+    public String getCourseName() {
+        return courseName;
     }
 
-    public void setCourse_name(String course_name) {
-        this.course_name = course_name;
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
-    public String getCourse_code() {
-        return course_code;
+    public String getCourseCode() {
+        return courseCode;
     }
 
-    public void setCourse_code(String course_code) {
-        this.course_code = course_code;
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
-    public Integer getCourse_id() {
-        return course_id;
+    public Integer getCourseId() {
+        return courseId;
     }
 
-    public void setCourse_id(Integer course_id) {
-        this.course_id = course_id;
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
     @Override
     public String toString() {
         return "Course{" +
-                "course_id=" + course_id +
-                ", course_code='" + course_code + '\'' +
-                ", course_name='" + course_name + '\'' +
-                ", course_units=" + course_units +
-                ", course_created_at=" + course_created_at +
+                "courseId=" + courseId +
+                ", courseCode='" + courseCode + '\'' +
+                ", courseName='" + courseName + '\'' +
+                ", courseUnits=" + courseUnits +
+                ", courseCreatedAt=" + courseCreatedAt +
                 '}';
     }
 }

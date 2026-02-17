@@ -28,8 +28,8 @@ public class StudentGradesView {
 //        // Print each course
 //        for (Enrollment studentCourse : studentCourses) {
 //            System.out.printf("%-10s | %-30s | %-7d | %-5s%n",
-//                    studentCourse.getCourse().getCourse_id(),
-//                    studentCourse.getCourse().getCourse_name(),
+//                    studentCourse.getCourse().getCourseId(),
+//                    studentCourse.getCourse().getCourseName(),
 //                    studentCourse.getCourse().getCredits(),
 //                    studentCourse.getGrade() != null ? studentCourse.getGrade() : "N/A");
 //        }

@@ -44,54 +44,55 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
 
     @Override
     public Teacher create(Teacher entity) {
-        Connection connection = null;
-        try {
-            connection = DatabaseUtils.getConnection();
-            connection.setAutoCommit(false);
-
-            try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT_TEACHER_QUERY, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setInt(1, entity.getUser_id());
-                ps.setString(2, entity.getFirst_name());
-                ps.setString(3, entity.getLast_name());
-                ps.setDate(4, DateUtils.toSqlDate(entity.getHire_date()));
-
-                int affectedRows = ps.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("TeacherDAO.create(): Failed to insert teacher.");
-                }
-
-                try (ResultSet keys = ps.getGeneratedKeys()) {
-                    if (keys.next()) {
-                        entity.setTeacher_id(keys.getInt(1));
-                    }
-                }
-
-                connection.commit();
-                DatabaseUtils.printNewEntityCreated(entity, entity.getTeacher_id());
-                return entity;
-            }
-
-        } catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex) {
-                    DatabaseUtils.handleSQLException("TeacherDAO.create().rollback", ex, LOGGER);
-                }
-            }
-            DatabaseUtils.handleSQLException("TeacherDAO.create().null", e, LOGGER);
-            return null;
-        } finally {
-            if (connection != null) {
-                try {
-                    DatabaseUtils.printSQLConnectionClose("TeacherDAO.create()", TeacherDAO.class);
-                    connection.setAutoCommit(true);
-                    connection.close();
-                } catch (SQLException ex) {
-                    DatabaseUtils.handleSQLException("TeacherDAO.create().finally.close", ex, LOGGER);
-                }
-            }
-        }
+//        Connection connection = null;
+//        try {
+//            connection = DatabaseUtils.getConnection();
+//            connection.setAutoCommit(false);
+//
+//            try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT_TEACHER_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+//                ps.setInt(1, entity.getUser_id());
+//                ps.setString(2, entity.getFirst_name());
+//                ps.setString(3, entity.getLast_name());
+//                ps.setDate(4, DateUtils.toSqlDate(entity.getHire_date()));
+//
+//                int affectedRows = ps.executeUpdate();
+//                if (affectedRows == 0) {
+//                    throw new SQLException("TeacherDAO.create(): Failed to insert teacher.");
+//                }
+//
+//                try (ResultSet keys = ps.getGeneratedKeys()) {
+//                    if (keys.next()) {
+//                        entity.setTeacher_id(keys.getInt(1));
+//                    }
+//                }
+//
+//                connection.commit();
+//                DatabaseUtils.printNewEntityCreated(entity, entity.getTeacher_id());
+//                return entity;
+//            }
+//
+//        } catch (SQLException e) {
+//            if (connection != null) {
+//                try {
+//                    connection.rollback();
+//                } catch (SQLException ex) {
+//                    DatabaseUtils.handleSQLException("TeacherDAO.create().rollback", ex, LOGGER);
+//                }
+//            }
+//            DatabaseUtils.handleSQLException("TeacherDAO.create().null", e, LOGGER);
+//            return null;
+//        } finally {
+//            if (connection != null) {
+//                try {
+//                    DatabaseUtils.printSQLConnectionClose("TeacherDAO.create()", TeacherDAO.class);
+//                    connection.setAutoCommit(true);
+//                    connection.close();
+//                } catch (SQLException ex) {
+//                    DatabaseUtils.handleSQLException("TeacherDAO.create().finally.close", ex, LOGGER);
+//                }
+//            }
+//        }
+        return null;
     }
 
     @Override
@@ -178,63 +179,65 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
     }
 
     private List<Course> processResultSetCoursesOfTeacher(ResultSet resultSet) throws SQLException {
-        List<Course> coursesOfTeacher = new ArrayList<>();
-        while(resultSet.next()){
-            Course course = new Course();
-            System.out.println("Right here");
-            course.setCourse_id(resultSet.getString("course_id"));
-            course.setCourse_name(resultSet.getString("course_name"));
-            course.setCredits(resultSet.getInt("credits"));
-            course.setTeacher_id(resultSet.getInt("teacher_id"));
-            coursesOfTeacher.add(course);
-        }
-        return coursesOfTeacher;
+//        List<Course> coursesOfTeacher = new ArrayList<>();
+//        while(resultSet.next()){
+//            Course course = new Course();
+//            System.out.println("Right here");
+//            course.setCourseId(resultSet.getString("course_id"));
+//            course.setCourseName(resultSet.getString("course_name"));
+//            course.setCredits(resultSet.getInt("credits"));
+//            course.setTeacher_id(resultSet.getInt("teacher_id"));
+//            coursesOfTeacher.add(course);
+//        }
+//        return coursesOfTeacher;
+        return null;
     }
 
     //----------------------UPDATE-------------------------
     @Override
     public Teacher update(Teacher entity) {
-        Connection connection = null;
-        try {
-            connection = DatabaseUtils.getConnection();
-            connection.setAutoCommit(false);
-
-            try (PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_TEACHER_QUERY)) {
-                ps.setString(1, entity.getFirst_name());
-                ps.setString(2, entity.getLast_name());
-                ps.setDate(3, DateUtils.toSqlDate(entity.getHire_date()));
-                ps.setInt(4, entity.getTeacher_id());
-
-                int affectedRows = ps.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("TeacherDAO.update(): Teacher not found with id " + entity.getTeacher_id());
-                }
-            }
-            connection.commit();
-            System.out.println("Teacher updated with id " + entity.getTeacher_id());
-            return entity;
-
-        } catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex) {
-                    DatabaseUtils.handleSQLException("TeacherDAO.update().rollback", ex, LOGGER);
-                }
-            }
-            DatabaseUtils.handleSQLException("TeacherDAO.update()", e, LOGGER);
-            return null;
-        } finally {
-            if (connection != null) {
-                try {
-                    DatabaseUtils.printSQLConnectionClose("TeacherDAO.update()", TeacherDAO.class);
-                    connection.setAutoCommit(true);
-                    connection.close();
-                } catch (SQLException ex) {
-                    DatabaseUtils.handleSQLException("TeacherDAO.update().finally.close", ex, LOGGER);
-                }
-            }
-        }
+//        Connection connection = null;
+//        try {
+//            connection = DatabaseUtils.getConnection();
+//            connection.setAutoCommit(false);
+//
+//            try (PreparedStatement ps = connection.prepareStatement(SQL_UPDATE_TEACHER_QUERY)) {
+//                ps.setString(1, entity.getFirst_name());
+//                ps.setString(2, entity.getLast_name());
+//                ps.setDate(3, DateUtils.toSqlDate(entity.getHire_date()));
+//                ps.setInt(4, entity.getTeacher_id());
+//
+//                int affectedRows = ps.executeUpdate();
+//                if (affectedRows == 0) {
+//                    throw new SQLException("TeacherDAO.update(): Teacher not found with id " + entity.getTeacher_id());
+//                }
+//            }
+//            connection.commit();
+//            System.out.println("Teacher updated with id " + entity.getTeacher_id());
+//            return entity;
+//
+//        } catch (SQLException e) {
+//            if (connection != null) {
+//                try {
+//                    connection.rollback();
+//                } catch (SQLException ex) {
+//                    DatabaseUtils.handleSQLException("TeacherDAO.update().rollback", ex, LOGGER);
+//                }
+//            }
+//            DatabaseUtils.handleSQLException("TeacherDAO.update()", e, LOGGER);
+//            return null;
+//        } finally {
+//            if (connection != null) {
+//                try {
+//                    DatabaseUtils.printSQLConnectionClose("TeacherDAO.update()", TeacherDAO.class);
+//                    connection.setAutoCommit(true);
+//                    connection.close();
+//                } catch (SQLException ex) {
+//                    DatabaseUtils.handleSQLException("TeacherDAO.update().finally.close", ex, LOGGER);
+//                }
+//            }
+//        }
+        return null;
     }
 
     @Override
@@ -280,24 +283,26 @@ public class TeacherDAO implements DAO<Teacher, Integer> {
     }
 
     private List<Teacher> processResultSet(ResultSet rs) throws SQLException {
-        List<Teacher> teachers = new ArrayList<>();
-        while (rs.next()) {
-            Teacher teacher = new Teacher();
-            // User data
-            teacher.setUser_id(rs.getInt("user_id"));
-            teacher.setUsername(rs.getString("username"));
-            teacher.setUser_email(rs.getString("user_email"));
-            teacher.setPassword_hash(rs.getString("password_hash"));
-            teacher.setRole_id(rs.getInt("role_id"));
-            teacher.setUser_created_at(DateUtils.toLocalDateTime(rs.getTimestamp("user_created_at")));
-            // Teacher data
-            teacher.setTeacher_id(rs.getInt("teacher_id"));
-            teacher.setFirst_name(rs.getString("first_name"));
-            teacher.setLast_name(rs.getString("last_name"));
-            teacher.setHire_date(DateUtils.toLocalDate(rs.getDate("hire_date")));
-            teachers.add(teacher);
-        }
+//        List<Teacher> teachers = new ArrayList<>();
+//        while (rs.next()) {
+//            Teacher teacher = new Teacher();
+//            // User data
+//            teacher.setUser_id(rs.getInt("user_id"));
+//            teacher.setUsername(rs.getString("username"));
+//            teacher.setUser_email(rs.getString("user_email"));
+//            teacher.setPassword_hash(rs.getString("password_hash"));
+//            teacher.setRole_id(rs.getInt("role_id"));
+//            teacher.setUser_created_at(DateUtils.toLocalDateTime(rs.getTimestamp("user_created_at")));
+//            // Teacher data
+//            teacher.setTeacher_id(rs.getInt("teacher_id"));
+//            teacher.setFirst_name(rs.getString("first_name"));
+//            teacher.setLast_name(rs.getString("last_name"));
+//            teacher.setHire_date(DateUtils.toLocalDate(rs.getDate("hire_date")));
+//            teachers.add(teacher);
+//        }
+//
+//        return teachers;
+        return null;
+     }
 
-        return teachers;
-    }
 }
