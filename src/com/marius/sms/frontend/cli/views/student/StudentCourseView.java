@@ -44,8 +44,8 @@ public class StudentCourseView {
                         schedule.getStartTime() + " - " +
                         schedule.getEndTime() + " at " + schedule.getRoom());
             }
-            System.out.println("------------------------------------------------");
         }
+        System.out.println("------------------------------------------------");
     }
 
 }

@@ -136,6 +136,8 @@ public class StudentDAO implements DAO<Student, Integer> {
      * @param userId
      * @return
      */
+
+    //TODO: implement this in getOne() method instead
     public Optional<Student> getStudentByUserId(Integer userId) {
         //Get all Students using user_id (for inheritance)
         String SQL_GET_STUDENT_BY_USER_ID_QUERY =
@@ -161,100 +163,7 @@ public class StudentDAO implements DAO<Student, Integer> {
         return Optional.empty();
     }
 
-    /**
-     * I need
-     * enrollmentId from Enrollments to connect to CourseOffering
-     * courseCode from Course
-     * courseName from Course
-     * sectionCode from CourseOffering
-     * teacherName from CourseOffering
-     * Term
-     * dayOfWeek from OfferingSchedule where
-     * startTime from OfferingSchedule
-     * endTime from OfferingSchedule
-     * room from OfferingSchedule
-     */
 
-
-    /**
-     * This is defecated, done in OfferingScheduleDAO and EnrollmentDAO
-     */
-//    public List<StudentCourseDTO> getCoursesOfStudent(Integer studentId) {
-//        List<StudentCourseDTO> courses = new ArrayList<>();
-//        Map<Integer, StudentCourseDTO> offeringMap = new HashMap<>();
-//
-//        String courseQuery = """
-//        SELECT
-//            e.status AS enrollment_status,
-//            e.final_grade,
-//            co.course_offering_id,
-//            co.section_code,
-//            c.course_code,
-//            c.course_name,
-//            c.course_units,
-//            t.first_name || ' ' || t.last_name AS teacher_name,
-//            tr.start_date,
-//            tr.end_date
-//        FROM sms.enrollments e
-//        JOIN sms.course_offerings co ON e.course_offering_id = co.course_offering_id
-//        JOIN sms.courses c ON co.course_id = c.course_id
-//        JOIN sms.teachers t ON co.teacher_id = t.teacher_id
-//        JOIN sms.terms tr ON co.term_id = tr.term_id
-//        WHERE e.student_id = ?
-//        ORDER BY tr.start_date DESC, co.section_code
-//    """;
-//
-//        String scheduleQuery = """
-//        SELECT
-//            os.course_offering_id,
-//            os.offering_schedule_id,
-//            os.day_of_week,
-//            os.start_time,
-//            os.end_time,
-//            os.room
-//        FROM sms.offering_schedules os
-//        WHERE os.course_offering_id IN (%s)
-//        ORDER BY os.course_offering_id,
-//                 CASE
-//                   WHEN os.day_of_week = 'MON' THEN 1
-//                   WHEN os.day_of_week = 'TUE' THEN 2
-//                   WHEN os.day_of_week = 'WED' THEN 3
-//                   WHEN os.day_of_week = 'THU' THEN 4
-//                   WHEN os.day_of_week = 'FRI' THEN 5
-//                   WHEN os.day_of_week = 'SAT' THEN 6
-//                   WHEN os.day_of_week = 'SUN' THEN 7
-//                 END
-//    """;
-//
-//        try (Connection conn = DatabaseUtils.getConnection();
-//             PreparedStatement ps = conn.prepareStatement(courseQuery)) {
-//
-//            ps.setInt(1, studentId);
-//            ResultSet rs = ps.executeQuery();
-//
-//            // Process ResultSet using helper
-//            processResultSetCoursesOfStudent(rs, courses, offeringMap);
-//
-//            if (!offeringMap.isEmpty()) {
-//                // Build IN clause
-//                String inClause = offeringMap.keySet().toString()
-//                        .replace("[", "")
-//                        .replace("]", "");
-//                String finalScheduleQuery = String.format(scheduleQuery, inClause);
-//
-//                try (PreparedStatement ps2 = conn.prepareStatement(finalScheduleQuery)) {
-//                    ResultSet rs2 = ps2.executeQuery();
-//                    processResultSetSchedules(rs2, offeringMap);
-//                }
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Failed to fetch student courses", e);
-//        }
-//
-//        return courses;
-//    }
 
     //STUDENT GET BY STUDENT user_email
     public Optional<Student> getStudentByEmail(String user_email) {
@@ -373,6 +282,7 @@ public class StudentDAO implements DAO<Student, Integer> {
 //        }
         return null;
     }
+
     //Update Student First Name
     public Student updateFirstName(Student entity) {
 //        Connection connection = null;
@@ -581,28 +491,32 @@ public class StudentDAO implements DAO<Student, Integer> {
             student.setUser_email((String) getColumn.apply("user_email", String.class));
             student.setPassword_hash((String) getColumn.apply("password_hash", String.class));
             student.setRole_id((Integer) getColumn.apply("role_id", Integer.class));
-
-            // Safe timestamp conversion
             Timestamp createdTs = (Timestamp) getColumn.apply("user_created_at", Timestamp.class);
-            student.setUser_created_at(createdTs != null ? DateUtils.toLocalDateTime(createdTs) : null);
+            if (createdTs != null)
+                student.setUser_created_at(DateUtils.toLocalDateTime(createdTs));
+            else
+                student.setUser_created_at(null);
 
             // Student data
             student.setStudent_id((Integer) getColumn.apply("student_id", Integer.class));
             student.setFirst_name((String) getColumn.apply("first_name", String.class));
             student.setMiddle_name((String) getColumn.apply("middle_name", String.class));
             student.setLast_name((String) getColumn.apply("last_name", String.class));
-
             Date dob = (Date) getColumn.apply("date_of_birth", Date.class);
-            student.setDate_of_birth(dob != null ? DateUtils.toLocalDate(dob) : null);
-
+            if (dob != null)
+                student.setDate_of_birth(DateUtils.toLocalDate(dob));
+            else
+                student.setDate_of_birth(null);
             student.setProgram_id((Integer) getColumn.apply("program_id", Integer.class));
             student.setCurriculum_id((Integer) getColumn.apply("curriculum_id", Integer.class));
             student.setYear_level((Integer) getColumn.apply("year_level", Integer.class));
             student.setIs_irregular((Boolean) getColumn.apply("is_irregular", Boolean.class));
             student.setIs_active((Boolean) getColumn.apply("is_active", Boolean.class));
-
             Date grad = (Date) getColumn.apply("graduated_at", Date.class);
-            student.setGraduated_at(grad != null ? DateUtils.toLocalDate(grad) : null);
+            if (grad != null)
+                student.setGraduated_at(DateUtils.toLocalDate(grad));
+            else
+                student.setGraduated_at(null);
 
             students.add(student);
         }

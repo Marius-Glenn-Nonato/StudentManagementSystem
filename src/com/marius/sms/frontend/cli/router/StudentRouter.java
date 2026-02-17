@@ -17,7 +17,7 @@ public class StudentRouter implements ObjectRouter<Student> {
                 StudentAttendanceView studentAttendanceView = new StudentAttendanceView(student);
                 studentAttendanceView.show();
                 return true;
-            case 6:
+            case 5:
                 StudentProfileView studentProfileView  = new StudentProfileView(student);
                 studentProfileView.show();
                 return true;
