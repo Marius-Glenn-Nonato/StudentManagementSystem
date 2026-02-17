@@ -2,8 +2,6 @@ package com.marius.sms.frontend.cli.router;
 
 import com.marius.sms.backend.entities.Teacher;
 import com.marius.sms.backend.exception.InvalidChoiceException;
-import com.marius.sms.frontend.cli.views.student.StudentGradesView;
-import com.marius.sms.frontend.cli.views.student.StudentProfileView;
 import com.marius.sms.frontend.cli.views.teacher.TeacherCoursesView;
 
 public class TeacherRouter implements ObjectRouter<Teacher> {

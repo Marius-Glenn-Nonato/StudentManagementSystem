@@ -1,7 +1,9 @@
 package com.marius.sms.backend.service;
 
+import com.marius.sms.backend.dao.AttendanceDAO;
 import com.marius.sms.backend.dao.EnrollmentDAO;
 import com.marius.sms.backend.dao.OfferingScheduleDAO;
+import com.marius.sms.backend.dto.StudentAttendanceDTO;
 import com.marius.sms.backend.dto.StudentCourseDTO;
 import com.marius.sms.backend.entities.Enrollment;
 import com.marius.sms.backend.entities.OfferingSchedule;
@@ -13,15 +15,17 @@ import java.util.stream.Collectors;
 
 public class StudentService {
 
-    private final EnrollmentDAO enrollmentDAO;
-    private final OfferingScheduleDAO scheduleDAO;
+
 
     public StudentService() {
-        this.enrollmentDAO = new EnrollmentDAO();
-        this.scheduleDAO = new OfferingScheduleDAO();
     }
 
+
+//  DTO is built in this method as it fetches data from multiple DAOs
     public List<StudentCourseDTO> getCoursesOfStudent(int studentId) {
+        EnrollmentDAO enrollmentDAO = new EnrollmentDAO();
+        OfferingScheduleDAO scheduleDAO = new OfferingScheduleDAO();
+
         List<StudentCourseDTO> studentCourseDTOS = new ArrayList<>();
 
         // 1 Fetch enrollments from DAO
@@ -59,6 +63,12 @@ public class StudentService {
         }
 
         return studentCourseDTOS;
+    }
+
+    public List<StudentAttendanceDTO> getAttendanceOfStudent(int studentId) {
+        AttendanceDAO attendanceDAO = new AttendanceDAO();
+        List<StudentAttendanceDTO> studentAttendanceDTOS = attendanceDAO.getStudentAttendance(studentId);
+        return studentAttendanceDTOS;
     }
 }
 

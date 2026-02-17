@@ -41,8 +41,6 @@ public class EnrollmentDAO {
         String query = """
             SELECT 
                 e.enrollment_id,
-                e.status AS enrollment_status,
-                e.final_grade,
                 co.course_offering_id,
                 co.section_code,
                 c.course_id,
@@ -53,7 +51,6 @@ public class EnrollmentDAO {
                 t.first_name,
                 t.last_name,
                 tr.term_id,
-                tr.term_name,
                 tr.start_date,
                 tr.end_date
             FROM sms.enrollments e
@@ -90,8 +87,6 @@ public class EnrollmentDAO {
 
             // Enrollment
             e.setEnrollmentId(rs.getInt("enrollment_id"));
-            e.setStatus(rs.getString("enrollment_status"));
-            e.setFinalGrade(rs.getDouble("final_grade"));
 
             // CourseOffering
             CourseOffering co = new CourseOffering();
@@ -116,7 +111,6 @@ public class EnrollmentDAO {
             // Term
             Term term = new Term();
             term.setTermId(rs.getInt("term_id"));
-            term.setTermName(rs.getString("term_name"));
             term.setStartDate(rs.getDate("start_date").toLocalDate());
             term.setEndDate(rs.getDate("end_date").toLocalDate());
             co.setTerm(term);

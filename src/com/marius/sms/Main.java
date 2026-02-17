@@ -15,9 +15,9 @@ public class Main {
 //
 //        String passcode = PasswordChecker.hashPassword("randy");
 //        System.out.println(passcode);
-//        // Start the SMS application
-//        MainMenuCLI mainMenuCLI = new MainMenuCLI();
-//        mainMenuCLI.start();
+        // Start the SMS application
+        MainMenuCLI mainMenuCLI = new MainMenuCLI();
+        mainMenuCLI.start();
 
 
 //        // Previous test code - commented out
@@ -26,7 +26,7 @@ public class Main {
 //        for (Role role : roles) {
 //            System.out.println(role);
 //        }
-
+//
 //        StudentDAO studentDAO = new StudentDAO();
 //        List<Student> students = studentDAO.getAll();
 //        for (Student student : students) {
@@ -58,35 +58,33 @@ public class Main {
 //        if(course.isPresent()) {
 //            System.out.println(course.get());
 //        }
-
-        StudentService studentService = new StudentService(); // assuming your method is in this class
-        Integer studentId = 1; // change to any existing student_id in your DB
-
-        List<StudentCourseDTO> courses = studentService.getCoursesOfStudent(studentId);
-
-        // Print out the courses and their schedules
-        for (StudentCourseDTO dto : courses) {
-            Enrollment enrollment = dto.getEnrollment();
-            CourseOffering offering = enrollment.getCourse_offering();
-            Course course = offering.getCourse();
-            Teacher teacher = offering.getTeacher();
-            Term term = offering.getTerm();
-
-            System.out.println("------------------------------------------------");
-            System.out.println("Course: " + course.getCourseCode() + " - " + course.getCourseName());
-            System.out.println("Section: " + offering.getSectionCode());
-            System.out.println("Teacher: " + teacher.getFirst_name());
-            System.out.println("Term: " + term.getStartDate() + " to " + term.getEndDate());
-            System.out.println("Status: " + enrollment.getStatus());
-            System.out.println("Final Grade: " + enrollment.getFinalGrade());
-
-            System.out.println("Schedule:");
-            for (OfferingSchedule schedule : dto.getOfferingSchedules()) {
-                System.out.println("  " + schedule.getDayOfWeek() + " " +
-                        schedule.getStartTime() + " - " +
-                        schedule.getEndTime() + " at " + schedule.getRoom());
-            }
-        }
+//
+//        StudentService studentService = new StudentService(); // assuming your method is in this class
+//        Integer studentId = 1; // change to any existing student_id in your DB
+//
+//        List<StudentCourseDTO> courses = studentService.getCoursesOfStudent(studentId);
+//
+//        // Print out the courses and their schedules
+//        for (StudentCourseDTO dto : courses) {
+//            Enrollment enrollment = dto.getEnrollment();
+//            CourseOffering offering = enrollment.getCourse_offering();
+//            Course course = offering.getCourse();
+//            Teacher teacher = offering.getTeacher();
+//            Term term = offering.getTerm();
+//
+//            System.out.println("------------------------------------------------");
+//            System.out.println("Course Code: " + course.getCourseCode());
+//            System.out.println("Course Description"  + course.getCourseName());
+//            System.out.println("Course Section Code: " + offering.getSectionCode());
+//            System.out.println("Teacher: " + teacher.getFirst_name() + " " + teacher.getLast_name());
+//
+//            System.out.println("Schedule:");
+//            for (OfferingSchedule schedule : dto.getOfferingSchedules()) {
+//                System.out.println("  " + schedule.getDayOfWeek() + " " +
+//                        schedule.getStartTime() + " - " +
+//                        schedule.getEndTime() + " at " + schedule.getRoom());
+//            }
+//        }
 
 
     }

@@ -6,7 +6,9 @@ import com.marius.sms.util.DatabaseUtils;
 import com.marius.sms.util.DateUtils;
 
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
 public class StudentDAO implements DAO<Student, Integer> {
@@ -29,23 +31,20 @@ public class StudentDAO implements DAO<Student, Integer> {
 
     @Override
     public List<Student> getAll() {
-//        //Get all Students
-//        String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.student_id, s.first_name, s.middle_name,s.last_name,s.date_of_birth, s.program_id, s.curriculum_id, s.year_level, s.is_irregular, s.is_active, s.graduated_at, s.user_id,
-//        u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at
-//        FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
-//        List<Student> students = new ArrayList<>();
-//        try(
-//                Connection connection = DatabaseUtils.getConnection();
-//                Statement statement = connection.createStatement();
-//                ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_STUDENTS_QUERY);
-//                ){
-//            students = processResultSet(resultSet);
-//        } catch (SQLException e) {
-//            DatabaseUtils.handleSQLException("StudentDAO.getAll()",e,LOGGER);
-//        }
-//        DatabaseUtils.printSQLConnectionClose("StudentDAO.getAll()",StudentDAO.class);
-//        return students;
-        return null;
+        //Get all Students
+        String SQL_GET_ALL_STUDENTS_QUERY = "SELECT s.student_id, s.first_name,s.middle_name,s.last_name,s.date_of_birth, s.program_id, s.curriculum_id, s.year_level, s.is_irregular, s.is_active, s.graduated_at, s.user_id, u.username, u.user_email, u.password_hash, u.role_id, u.user_created_at FROM "+TABLE_NAME+" s JOIN sms.users u ON s.user_id = u.user_id";
+        List<Student> students = new ArrayList<>();
+        try(
+                Connection connection = DatabaseUtils.getConnection();
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_STUDENTS_QUERY);
+                ){
+            students = processResultSet(resultSet);
+        } catch (SQLException e) {
+            DatabaseUtils.handleSQLException("StudentDAO.getAll()",e,LOGGER);
+        }
+        DatabaseUtils.printSQLConnectionClose("StudentDAO.getAll()",StudentDAO.class);
+        return students;
     }
 
     //----------------------INSERT-----------------------------
@@ -553,29 +552,61 @@ public class StudentDAO implements DAO<Student, Integer> {
     // s.student_id, s.first_name, s.middle_name,s.last_name,s.date_of_birth, s.program_id, s.curriculum_id, s.year_level, s.is_irregular, s.is_active, s.graduated_at, s.user_id,
     private List<Student> processResultSet(ResultSet resultSet) throws SQLException {
         List<Student> students = new ArrayList<>();
+
+        // Step 1: Build a set of available columns
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        Set<String> columns = new HashSet<>();
+        for (int i = 1; i <= columnCount; i++) {
+            columns.add(metaData.getColumnLabel(i).toLowerCase());
+        }
+
+        // Step 2: Safe getter helper
+        BiFunction<String, Class<?>, Object> getColumn = (colName, type) -> {
+            try {
+                if (columns.contains(colName.toLowerCase())) {
+                    return resultSet.getObject(colName);
+                }
+            } catch (SQLException e) {
+                // ignore any error, return null
+            }
+            return null;
+        };
+
         while (resultSet.next()) {
             Student student = new Student();
             // User data
-            student.setUser_id(resultSet.getInt("user_id"));
-            student.setUsername(resultSet.getString("username"));
-            student.setUser_email(resultSet.getString("user_email"));
-            student.setPassword_hash(resultSet.getString("password_hash"));
-            student.setRole_id(resultSet.getInt("role_id"));
-            student.setUser_created_at(DateUtils.toLocalDateTime(resultSet.getTimestamp("user_created_at")));
+            student.setUser_id((Integer) getColumn.apply("user_id", Integer.class));
+            student.setUsername((String) getColumn.apply("username", String.class));
+            student.setUser_email((String) getColumn.apply("user_email", String.class));
+            student.setPassword_hash((String) getColumn.apply("password_hash", String.class));
+            student.setRole_id((Integer) getColumn.apply("role_id", Integer.class));
+
+            // Safe timestamp conversion
+            Timestamp createdTs = (Timestamp) getColumn.apply("user_created_at", Timestamp.class);
+            student.setUser_created_at(createdTs != null ? DateUtils.toLocalDateTime(createdTs) : null);
+
             // Student data
-            student.setStudent_id(resultSet.getInt("student_id"));
-            student.setFirst_name(resultSet.getString("first_name"));
-            student.setMiddle_name("middle_name");
-            student.setLast_name(resultSet.getString("last_name"));
-            student.setDate_of_birth(DateUtils.toLocalDate(resultSet.getDate("date_of_birth")));
-            student.setProgram_id(resultSet.getInt("program_id"));
-            student.setCurriculum_id(resultSet.getInt("curriculum_id"));
-            student.setYear_level(resultSet.getInt("year_level"));
-            student.setIs_irregular(resultSet.getBoolean("is_irregular"));
-            student.setIs_active(resultSet.getBoolean("is_active"));
-            student.setGraduated_at(DateUtils.toLocalDate(resultSet.getDate("graduated_at")));
+            student.setStudent_id((Integer) getColumn.apply("student_id", Integer.class));
+            student.setFirst_name((String) getColumn.apply("first_name", String.class));
+            student.setMiddle_name((String) getColumn.apply("middle_name", String.class));
+            student.setLast_name((String) getColumn.apply("last_name", String.class));
+
+            Date dob = (Date) getColumn.apply("date_of_birth", Date.class);
+            student.setDate_of_birth(dob != null ? DateUtils.toLocalDate(dob) : null);
+
+            student.setProgram_id((Integer) getColumn.apply("program_id", Integer.class));
+            student.setCurriculum_id((Integer) getColumn.apply("curriculum_id", Integer.class));
+            student.setYear_level((Integer) getColumn.apply("year_level", Integer.class));
+            student.setIs_irregular((Boolean) getColumn.apply("is_irregular", Boolean.class));
+            student.setIs_active((Boolean) getColumn.apply("is_active", Boolean.class));
+
+            Date grad = (Date) getColumn.apply("graduated_at", Date.class);
+            student.setGraduated_at(grad != null ? DateUtils.toLocalDate(grad) : null);
+
             students.add(student);
         }
         return students;
     }
+
 }
