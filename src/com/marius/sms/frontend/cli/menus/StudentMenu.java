@@ -31,7 +31,7 @@ public class StudentMenu implements Menu {
             System.out.println("1. View My Courses Schedule");
             System.out.println("2. View Attendance ");
             System.out.println("3. View Statement of Accounts- Not yet Implemented");
-            System.out.println("4. View Curriculum Checklist - Not yet Implemented");
+            System.out.println("4. View Curriculum Checklist");
             System.out.println("5. View My Profile");
             System.out.println("6. Request Edit Profile - Not yet Implemented"); //This is because in the logic using GUI, there's an additional button to request edit then you can modify text fields there
             System.out.println("7. Logout");

@@ -11,14 +11,10 @@ import java.util.List;
 
 public class StudentCourseView {
     private final Student student;
-    private EnrollmentDAO enrollmentDAO;
-    private OfferingScheduleDAO offeringScheduleDAO;
     private StudentService studentService;
 
     public StudentCourseView(Student student) {
         this.student = student;
-        enrollmentDAO = new EnrollmentDAO();
-        offeringScheduleDAO = new OfferingScheduleDAO();
         studentService = new StudentService();
     }
 

@@ -1,6 +1,5 @@
 package com.marius.sms.backend.dao;
 
-import com.marius.sms.backend.dto.StudentCourseDTO;
 import com.marius.sms.backend.entities.*;
 import com.marius.sms.util.DatabaseUtils;
 import com.marius.sms.util.DateUtils;

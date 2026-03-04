@@ -1,10 +1,12 @@
 package com.marius.sms.backend.service;
 
 import com.marius.sms.backend.dao.AttendanceDAO;
+import com.marius.sms.backend.dao.CurriculumProgressDAO;
 import com.marius.sms.backend.dao.EnrollmentDAO;
 import com.marius.sms.backend.dao.OfferingScheduleDAO;
 import com.marius.sms.backend.dto.StudentAttendanceDTO;
 import com.marius.sms.backend.dto.StudentCourseDTO;
+import com.marius.sms.backend.entities.CurriculumProgress;
 import com.marius.sms.backend.entities.Enrollment;
 import com.marius.sms.backend.entities.OfferingSchedule;
 
@@ -65,10 +67,18 @@ public class StudentService {
         return studentCourseDTOS;
     }
 
+    //DTO is built in the DAO layer
     public List<StudentAttendanceDTO> getAttendanceOfStudent(int studentId) {
         AttendanceDAO attendanceDAO = new AttendanceDAO();
         List<StudentAttendanceDTO> studentAttendanceDTOS = attendanceDAO.getStudentAttendance(studentId);
         return studentAttendanceDTOS;
+    }
+
+    public List<CurriculumProgress> getCurriculumProgressOfStudent(int studentId) {
+        List<CurriculumProgress> curriculumProgressList = new ArrayList<>();
+        CurriculumProgressDAO curriculumProgressDAO = new CurriculumProgressDAO();
+        curriculumProgressList = curriculumProgressDAO.getStudentCurriculumProgress(studentId);
+        return curriculumProgressList;
     }
 }
 

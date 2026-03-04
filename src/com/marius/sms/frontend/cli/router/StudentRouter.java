@@ -2,6 +2,7 @@ package com.marius.sms.frontend.cli.router;
 
 import com.marius.sms.backend.entities.Student;
 import com.marius.sms.backend.exception.InvalidChoiceException;
+import com.marius.sms.frontend.cli.views.StudentCurriculumProgressView;
 import com.marius.sms.frontend.cli.views.student.StudentAttendanceView;
 import com.marius.sms.frontend.cli.views.student.StudentCourseView;
 import com.marius.sms.frontend.cli.views.student.StudentProfileView;
@@ -17,9 +18,19 @@ public class StudentRouter implements ObjectRouter<Student> {
                 StudentAttendanceView studentAttendanceView = new StudentAttendanceView(student);
                 studentAttendanceView.show();
                 return true;
+            case 3:
+                System.out.println("Nothing here yet");
+                return true;
+            case 4:
+                StudentCurriculumProgressView studentCurriculumProgressView = new StudentCurriculumProgressView(student);
+                studentCurriculumProgressView.show();
+                return true;
             case 5:
                 StudentProfileView studentProfileView  = new StudentProfileView(student);
                 studentProfileView.show();
+                return true;
+            case 6:
+                System.out.println("Nothing here yet");
                 return true;
             case 7:
                 return false;
